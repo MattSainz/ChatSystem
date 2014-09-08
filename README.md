@@ -43,7 +43,7 @@ Session Server Specification
 
 Chat Client Specification 
 
-  Start 
+  Start
   Join 
   Sumbit 
   GetNext
@@ -51,3 +51,4 @@ Chat Client Specification
   Leave
   Exit
 
+  starts with two command line parameters hostname and ip of chat server and port number of the chat server 
