@@ -22,6 +22,14 @@ CND_ARTIFACT_PATH_Release=dist/Release/GNU-MacOSX/chatsystem
 CND_PACKAGE_DIR_Release=dist/Release/GNU-MacOSX/package
 CND_PACKAGE_NAME_Release=chatsystem.tar
 CND_PACKAGE_PATH_Release=dist/Release/GNU-MacOSX/package/chatsystem.tar
+# ChatCoordinator configuration
+CND_PLATFORM_ChatCoordinator=GNU-MacOSX
+CND_ARTIFACT_DIR_ChatCoordinator=dist/ChatCoordinator/GNU-MacOSX
+CND_ARTIFACT_NAME_ChatCoordinator=chatsystem
+CND_ARTIFACT_PATH_ChatCoordinator=dist/ChatCoordinator/GNU-MacOSX/chatsystem
+CND_PACKAGE_DIR_ChatCoordinator=dist/ChatCoordinator/GNU-MacOSX/package
+CND_PACKAGE_NAME_ChatCoordinator=chatsystem.tar
+CND_PACKAGE_PATH_ChatCoordinator=dist/ChatCoordinator/GNU-MacOSX/package/chatsystem.tar
 #
 # include compiler specific variables
 #

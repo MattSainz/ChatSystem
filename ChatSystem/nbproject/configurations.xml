@@ -5,6 +5,7 @@
                    displayName="Header Files"
                    projectFiles="true">
       <itemPath>chat_coordinator.h</itemPath>
+      <itemPath>vector.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -13,15 +14,19 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
-      <itemPath>chat_client.c</itemPath>
       <itemPath>chat_coordinator.c</itemPath>
-      <itemPath>main.c</itemPath>
-      <itemPath>session_server.c</itemPath>
+      <itemPath>vector.c</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
                    displayName="Test Files"
                    projectFiles="false"
                    kind="TEST_LOGICAL_FOLDER">
+      <logicalFolder name="f1"
+                     displayName="chat_coord"
+                     projectFiles="true"
+                     kind="TEST">
+        <itemPath>tests/chat_test.c</itemPath>
+      </logicalFolder>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -39,16 +44,29 @@
         <rebuildPropChanged>false</rebuildPropChanged>
       </toolsSet>
       <compileType>
+        <cTool>
+          <incFile>
+            <pElem>chat_coordinator.h</pElem>
+          </incFile>
+        </cTool>
       </compileType>
-      <item path="chat_client.c" ex="false" tool="0" flavor2="0">
-      </item>
       <item path="chat_coordinator.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="chat_coordinator.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="main.c" ex="false" tool="0" flavor2="0">
+      <folder path="TestFiles/f1">
+        <linkerTool>
+          <output>${TESTDIR}/TestFiles/f1</output>
+          <linkerLibItems>
+            <linkerOptionItem>-lcunit</linkerOptionItem>
+          </linkerLibItems>
+        </linkerTool>
+      </folder>
+      <item path="tests/chat_test.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="session_server.c" ex="false" tool="0" flavor2="0">
+      <item path="vector.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="vector.h" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
     <conf name="Release" type="1">
@@ -71,15 +89,50 @@
           <developmentMode>5</developmentMode>
         </asmTool>
       </compileType>
-      <item path="chat_client.c" ex="false" tool="0" flavor2="0">
-      </item>
       <item path="chat_coordinator.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="chat_coordinator.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="main.c" ex="false" tool="0" flavor2="0">
+      <folder path="TestFiles/f1">
+        <linkerTool>
+          <output>${TESTDIR}/TestFiles/f1</output>
+          <linkerLibItems>
+            <linkerOptionItem>-lcunit</linkerOptionItem>
+          </linkerLibItems>
+        </linkerTool>
+      </folder>
+      <item path="tests/chat_test.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="session_server.c" ex="false" tool="0" flavor2="0">
+      <item path="vector.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="vector.h" ex="false" tool="3" flavor2="0">
+      </item>
+    </conf>
+    <conf name="ChatCoordinator" type="1">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+      </compileType>
+      <item path="chat_coordinator.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="chat_coordinator.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <folder path="TestFiles/f1">
+        <linkerTool>
+          <output>${TESTDIR}/TestFiles/f1</output>
+          <linkerLibItems>
+            <linkerOptionItem>-lcunit</linkerOptionItem>
+          </linkerLibItems>
+        </linkerTool>
+      </folder>
+      <item path="tests/chat_test.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="vector.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="vector.h" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
   </confs>

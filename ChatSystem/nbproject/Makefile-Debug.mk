@@ -35,11 +35,15 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
-	${OBJECTDIR}/chat_client.o \
 	${OBJECTDIR}/chat_coordinator.o \
-	${OBJECTDIR}/main.o \
-	${OBJECTDIR}/session_server.o
+	${OBJECTDIR}/vector.o
 
+# Test Directory
+TESTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}/tests
+
+# Test Files
+TESTFILES= \
+	${TESTDIR}/TestFiles/f1
 
 # C Compiler Flags
 CFLAGS=
@@ -65,28 +69,66 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/chatsystem: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.c} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/chatsystem ${OBJECTFILES} ${LDLIBSOPTIONS}
 
-${OBJECTDIR}/chat_client.o: chat_client.c 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} "$@.d"
-	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/chat_client.o chat_client.c
-
 ${OBJECTDIR}/chat_coordinator.o: chat_coordinator.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/chat_coordinator.o chat_coordinator.c
+	$(COMPILE.c) -g -include chat_coordinator.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/chat_coordinator.o chat_coordinator.c
 
-${OBJECTDIR}/main.o: main.c 
+${OBJECTDIR}/vector.o: vector.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.c
-
-${OBJECTDIR}/session_server.o: session_server.c 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} "$@.d"
-	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/session_server.o session_server.c
+	$(COMPILE.c) -g -include chat_coordinator.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/vector.o vector.c
 
 # Subprojects
 .build-subprojects:
+
+# Build Test Targets
+.build-tests-conf: .build-conf ${TESTFILES}
+${TESTDIR}/TestFiles/f1: ${TESTDIR}/tests/chat_test.o ${OBJECTFILES:%.o=%_nomain.o}
+	${MKDIR} -p ${TESTDIR}/TestFiles
+	${LINK.c}   -o ${TESTDIR}/TestFiles/f1 $^ ${LDLIBSOPTIONS} -lcunit 
+
+
+${TESTDIR}/tests/chat_test.o: tests/chat_test.c 
+	${MKDIR} -p ${TESTDIR}/tests
+	${RM} "$@.d"
+	$(COMPILE.c) -g -include chat_coordinator.h -MMD -MP -MF "$@.d" -o ${TESTDIR}/tests/chat_test.o tests/chat_test.c
+
+
+${OBJECTDIR}/chat_coordinator_nomain.o: ${OBJECTDIR}/chat_coordinator.o chat_coordinator.c 
+	${MKDIR} -p ${OBJECTDIR}
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/chat_coordinator.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.c) -g -include chat_coordinator.h -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/chat_coordinator_nomain.o chat_coordinator.c;\
+	else  \
+	    ${CP} ${OBJECTDIR}/chat_coordinator.o ${OBJECTDIR}/chat_coordinator_nomain.o;\
+	fi
+
+${OBJECTDIR}/vector_nomain.o: ${OBJECTDIR}/vector.o vector.c 
+	${MKDIR} -p ${OBJECTDIR}
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/vector.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.c) -g -include chat_coordinator.h -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/vector_nomain.o vector.c;\
+	else  \
+	    ${CP} ${OBJECTDIR}/vector.o ${OBJECTDIR}/vector_nomain.o;\
+	fi
+
+# Run Test Targets
+.test-conf:
+	@if [ "${TEST}" = "" ]; \
+	then  \
+	    ${TESTDIR}/TestFiles/f1 || true; \
+	else  \
+	    ./${TEST} || true; \
+	fi
 
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}

@@ -7,27 +7,46 @@
 
 #include "chat_coordinator.h"
 
-int create_socket()
+Vector* running_sessions;
+    //stores all of the currently running sessions 
+
+int create_socket(int type, int protocol)
 {
   int to_ret = 0;
-  if ((to_ret = socket(AF_INET, SOCK_DGRAM, 0)) < 0) 
+  
+  if ((to_ret = socket(AF_INET, type, protocol)) < 0) 
   {
     perror("cannot create socket");
     to_ret = -1;
   }
+  
   return to_ret;
 }//end create socket
 
-struct sockaddr_in new_connection(int socket)
+struct connection new_connection(int connection_type)
 {
+  struct connection to_ret;
+  
   struct sockaddr_in my_address;
     //holds connection information
-  int my_socket = create_socket();
-    //attempt to create a socket
+  
+  int my_socket;
+  if( connection_type == 1)
+  {
+     my_socket = create_socket(SOCK_DGRAM, IPPROTO_UDP);
+      //attempt to create a socket
+  }
+  else
+  {
+    my_socket = create_socket(SOCK_STREAM,IPPROTO_TCP);
+  }
+  
+  to_ret.conn = my_address;
+  to_ret.socket = my_socket;
 
   if( my_socket != -1 )
   {
-     bzero(&my_address, sizeof(my_address));
+    bzero(&my_address, sizeof(my_address));
       //allocates memory
 
     my_address.sin_family = AF_INET;
@@ -42,16 +61,84 @@ struct sockaddr_in new_connection(int socket)
     {
       perror("Bind failed");
     }//end bind socket
+    
   }//end check for socket
-  return my_address;
+  
+  return to_ret;
 }//end bind socket
 
+void start_new_session(int port)
+{
+    int pid;
+    if( (pid = fork()) == 0)
+    {
+      printf("Hello From Child");
+      //TODO create session server and pass it the tcp port
+      exit(0);
+    }
+    else if( pid == -1 )
+    {
+      perror("Error Forking");
+    }
+}
+
+//TODO fix this horrible horrible memory leak
 void my_start(char* s_name, char* to_client)
 {
+  if( my_find(s_name) == NULL )
+  {
+    Node* to_array;
+    char* tmp;
+    struct connection tcp_connection = new_connection(0);
+      //TODO create session server
+    tmp = (char*)malloc(sizeof(s_name));
+      //allocate space for the name
+    tmp = s_name;
+      //store the name
+    to_array = (Node*)malloc(sizeof(tmp));
+      //make memory for this new information
+    to_array->session = tmp;
+      //set the memory 
+    to_array->port = tcp_connection.socket;
+    
+    vector_append(running_sessions, to_array);
+    
+    sprintf(to_client, "%d", tcp_connection.conn.sin_port);
+      //set the message to be sent back to the client
+  }
+  else
+  {
+    to_client = "-1";
+      //error message to be sent back to the client
+  }//end unique session check
+  
 }//end my start
 
-void my_find(char* s_name, char* to_client)
+ Node* my_find(char* s_name)
 {
+  int i = 0;
+    //index into vector
+  Node* to_ret = NULL;
+    //the session does not already exist
+  Node* session;
+  
+  while( i < running_sessions->size)
+  {
+    session = vector_get(running_sessions, i);
+    
+    if( strcmp(s_name, session->session) == 0 )
+    {
+      to_ret = session;
+        //a session with the same name was found  
+        //note returning a pointer should work 
+        //because it was stored on the heap earlier
+      break;
+        //you only need to find one session 
+    }
+    i++;
+  }
+  
+  return to_ret;
 }//end my find
 
 void my_terminate(char* s_name, char* to_client)
@@ -64,17 +151,21 @@ void run_chat_coordinator()
     //stores information about the client
   socklen_t addrlen = sizeof(client_address);
     //stores the length of the client address
-  char buf[BUF_SIZE];
+  char buf[NAME_SIZE];
     //will store the message from the client
+  char to_client[BUF_SIZE];
+    //will store the message to be sent to the client
   int msg_len = 0;
     //stores the length of the message from the client
-
-  int socket = create_socket();
-    //attempt to create a socket
-  struct sockaddr_in myself = new_connection(socket);
+  struct connection myself = new_connection(1);
     //attempt to bind socket
-  printf("UDP Port Number: %d", myself.sin_port);
+  int socket = myself.socket;
+    //attempt to create a socket
+  printf("UDP Port Number: %d \n", myself.conn.sin_port);
     //output the port number of the new connection
+  
+  vector_init(running_sessions);
+    //inits vector that stores all sessions
 
   while(1)
   {
@@ -84,16 +175,19 @@ void run_chat_coordinator()
 
     if(strcmp(buf, START) == 0)
     {
+      my_start(buf, to_client);
     }
     else if(strcmp(buf, FIND) == 0)
     {
+      my_find(buf);
     }
     else if(strcmp(buf, TERM) == 0)
     {
+      my_terminate(buf, to_client);
     }
     else
     {
-      perror("Unknow msg received");
+      perror("Unknown msg received");
     }//determine action to take based on client request
 
   }//listen for commands
@@ -105,7 +199,7 @@ void run_chat_coordinator()
  */
 int main(int argc, char** argv)
 {  
-  return (EXIT_SUCCESS);
+  run_chat_coordinator();
 }//end main
 
 

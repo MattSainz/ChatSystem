@@ -23,7 +23,7 @@ AS=as
 # Macros
 CND_PLATFORM=GNU-MacOSX
 CND_DLIB_EXT=dylib
-CND_CONF=Release
+CND_CONF=ChatCoordinator
 CND_DISTDIR=dist
 CND_BUILDDIR=build
 
@@ -72,12 +72,12 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/chatsystem: ${OBJECTFILES}
 ${OBJECTDIR}/chat_coordinator.o: chat_coordinator.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/chat_coordinator.o chat_coordinator.c
+	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/chat_coordinator.o chat_coordinator.c
 
 ${OBJECTDIR}/vector.o: vector.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/vector.o vector.c
+	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/vector.o vector.c
 
 # Subprojects
 .build-subprojects:
@@ -92,7 +92,7 @@ ${TESTDIR}/TestFiles/f1: ${TESTDIR}/tests/chat_test.o ${OBJECTFILES:%.o=%_nomain
 ${TESTDIR}/tests/chat_test.o: tests/chat_test.c 
 	${MKDIR} -p ${TESTDIR}/tests
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${TESTDIR}/tests/chat_test.o tests/chat_test.c
+	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${TESTDIR}/tests/chat_test.o tests/chat_test.c
 
 
 ${OBJECTDIR}/chat_coordinator_nomain.o: ${OBJECTDIR}/chat_coordinator.o chat_coordinator.c 
@@ -103,7 +103,7 @@ ${OBJECTDIR}/chat_coordinator_nomain.o: ${OBJECTDIR}/chat_coordinator.o chat_coo
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.c) -O2 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/chat_coordinator_nomain.o chat_coordinator.c;\
+	    $(COMPILE.c) -g -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/chat_coordinator_nomain.o chat_coordinator.c;\
 	else  \
 	    ${CP} ${OBJECTDIR}/chat_coordinator.o ${OBJECTDIR}/chat_coordinator_nomain.o;\
 	fi
@@ -116,7 +116,7 @@ ${OBJECTDIR}/vector_nomain.o: ${OBJECTDIR}/vector.o vector.c
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.c) -O2 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/vector_nomain.o vector.c;\
+	    $(COMPILE.c) -g -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/vector_nomain.o vector.c;\
 	else  \
 	    ${CP} ${OBJECTDIR}/vector.o ${OBJECTDIR}/vector_nomain.o;\
 	fi

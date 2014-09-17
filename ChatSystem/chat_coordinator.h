@@ -1,30 +1,33 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/socket.h>
+#include <unistd.h>
 #include <netinet/in.h>
 #include "uthash.h"
+#include "vector.h"
 
 #define BUF_SIZE 80
+#define NAME_SIZE 8
 #define START "Start"
 #define FIND "Find"
 #define TERM "Terminate"
 
-struct hash
+struct connection
 {
-  char* s_name;
-
+  struct sockaddr_in conn;
+  int socket;
 };
 
 /*
  * creates socket
  */
-int create_socket();
+int create_socket(int type, int protocol);
 
 /*
  * creates a new UDB connection and binds
  * it to the port we created
  */
-struct sockaddr_in new_connection(int socket);
+struct connection new_connection(int connection_type);
 
 /*
  * Create a chat server if the secession doesn't already exist 
@@ -40,12 +43,17 @@ void my_start( char* s_name, char* to_client );
  * if found then returnes the server's address (port)
  * otherwise -1 is returned
  */
-void my_find( char* s_name, char* to_client );
+Node* my_find( char* s_name);
 
 /*
  * Terminates the chat session
  */
 void my_terminate( char* s_name, char* to_client );
+
+/*
+ * Create a new SessionServer
+ */
+void start_new_session(int port);
 
 /*
  * Waits for clients to call and then 
