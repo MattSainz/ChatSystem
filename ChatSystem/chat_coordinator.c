@@ -18,33 +18,31 @@ int create_socket()
   return to_ret;
 }//end create socket
 
-sockaddr_in new_connection(int socket)
+struct sockaddr_in new_connection(int socket)
 {
   struct sockaddr_in my_address;
     //holds connection information
   int my_socket = create_socket();
+    //attempt to create a socket
 
-  if( my_socket == -1 )
+  if( my_socket != -1 )
   {
-    return -1;
-  }
+     bzero(&my_address, sizeof(my_address));
+      //allocates memory
 
-  bzero(&my_address, sizeof(my_address));
-    //allocates memory
+    my_address.sin_family = AF_INET;
+      //sets connection type or connection family 
+    my_address.sin_addr.s_addr = htonl(INADDR_ANY);
+      //local host address htonol creates network format
+    my_address.sin_port = htons(0);
+      //a port of zero asks the os to pick a port for us
+      //htons formats network format
 
-  my_address.sin_family = AF_INET;
-    //sets connection type or connection family 
-  my_address.sin_addr.s_addr = htonl(INADDR_ANY);
-    //local host address htonol creates network format
-  my_address.sin_port = htons(0);
-    //a port of zero asks the os to pick a port for us
-    //htons formats network format
-
-  if(bind(my_socket(), (struct sockaddr*) &my_address, sizeof(my_address)) < 0)
-  {
-    perror("Bind failed");
-    return -1;
-  }//end bind socket
+    if(bind(my_socket, (struct sockaddr*) &my_address, sizeof(my_address)) < 0)
+    {
+      perror("Bind failed");
+    }//end bind socket
+  }//end check for socket
   return my_address;
 }//end bind socket
 
@@ -66,14 +64,14 @@ void run_chat_coordinator()
     //stores information about the client
   socklen_t addrlen = sizeof(client_address);
     //stores the length of the client address
-  unsigned char buf[BUF_SIZE];
+  char buf[BUF_SIZE];
     //will store the message from the client
   int msg_len = 0;
     //stores the length of the message from the client
 
   int socket = create_socket();
     //attempt to create a socket
-  sockaddr_in myself = new_connection(socket);
+  struct sockaddr_in myself = new_connection(socket);
     //attempt to bind socket
   printf("UDP Port Number: %d", myself.sin_port);
     //output the port number of the new connection
@@ -82,8 +80,9 @@ void run_chat_coordinator()
   {
     msg_len = recvfrom(socket, buf, BUF_SIZE, 0, 
                       (struct sockaddr *)&client_address, &addrlen);
+      //wait for client to send a message
 
-    if(strcmp(buf,START) == 0)
+    if(strcmp(buf, START) == 0)
     {
     }
     else if(strcmp(buf, FIND) == 0)
@@ -95,9 +94,10 @@ void run_chat_coordinator()
     else
     {
       perror("Unknow msg received");
-    }
+    }//determine action to take based on client request
 
   }//listen for commands
+  
 }//end run_chat_coordinator
 
 /*

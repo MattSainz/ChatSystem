@@ -24,7 +24,7 @@ int create_socket();
  * creates a new UDB connection and binds
  * it to the port we created
  */
-sockaddr_in new_connection(int socket);
+struct sockaddr_in new_connection(int socket);
 
 /*
  * Create a chat server if the secession doesn't already exist 
