@@ -4,6 +4,7 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
+      <itemPath>chat_coordinator.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -43,6 +44,8 @@
       </item>
       <item path="chat_coordinator.c" ex="false" tool="0" flavor2="0">
       </item>
+      <item path="chat_coordinator.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="main.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="session_server.c" ex="false" tool="0" flavor2="0">
@@ -71,6 +74,8 @@
       <item path="chat_client.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="chat_coordinator.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="chat_coordinator.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.c" ex="false" tool="0" flavor2="0">
       </item>
