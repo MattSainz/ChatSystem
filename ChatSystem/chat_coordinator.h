@@ -11,12 +11,13 @@
 #define START "Start"
 #define FIND "Find"
 #define TERM "Terminate"
+#define DEBUG 1
 
-struct connection
+typedef struct 
 {
-  struct sockaddr_in conn;
+  struct sockaddr_in c;
   int socket;
-};
+}Connection;
 
 /*
  * creates socket
@@ -27,7 +28,7 @@ int create_socket(int type, int protocol);
  * creates a new UDB connection and binds
  * it to the port we created
  */
-struct connection new_connection(int connection_type);
+void new_connection(int connection_type, Connection* to_ret);
 
 /*
  * Create a chat server if the secession doesn't already exist 

@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <CUnit/Basic.h>
 
+
 /*
  * CUnit Test Suite
  */
@@ -21,12 +22,77 @@ int clean_suite(void) {
   return 0;
 }
 
-void test1() {
-  CU_ASSERT(2 * 2 == 4);
+void createSocket()
+{
+  int test = create_socket(SOCK_DGRAM, IPPROTO_UDP);
+  CU_ASSERT( test != -1 );
 }
 
-void test2() {
-  CU_ASSERT(2 * 2 == 5);
+void createUDPConnection() 
+{
+  Connection test;
+  new_connection(1, &test);
+  CU_ASSERT( test.c.sin_port != -1);
+}
+
+void vectorInit() 
+{
+  Vector* test;
+  vector_init(test);
+  CU_ASSERT_PTR_NOT_NULL(test);
+
+}
+
+void runTest()
+{
+  run_chat_coordinator();
+  CU_PASS("run method was able to run");
+}
+
+void startTest()
+{
+  char* test = "test";
+  char test_ret[BUF_SIZE];
+  my_start(test, &test_ret);
+  CU_ASSERT_STRING_NOT_EQUAL(test_ret,"");
+}
+
+void findTest()
+{
+  char* test = "test";
+  Node* nodeTest;
+  nodeTest = my_find(test);
+  CU_ASSERT_PTR_NULL(nodeTest);
+}
+
+void dontFindTest()
+{
+  char* test = "foo";
+  Node* nodeTest;
+  nodeTest = my_find(test);
+  CU_ASSERT_PTR_NOT_NULL(nodeTest);
+}
+
+void findReturnsName()
+{
+  char* test = "test";
+  Node* nodeTest;
+  nodeTest = my_find(test);
+  CU_ASSERT_STRING_EQUAL(nodeTest->session,"test");
+}
+
+void findReturnsPort()
+{
+  char* test = "test";
+  Node* nodeTest;
+  nodeTest = my_find(test);
+  CU_ASSERT(nodeTest->port >= 0);
+}
+
+void startSessionTest()
+{
+  start_new_session(-1);
+  CU_PASS("Was able to create a new process");
 }
 
 int main() {
@@ -44,8 +110,18 @@ int main() {
   }
 
   /* Add the tests to the suite */
-  if ((NULL == CU_add_test(pSuite, "test1", test1)) ||
-          (NULL == CU_add_test(pSuite, "test2", test2))) {
+  if (
+       (NULL == CU_add_test(pSuite, "createSocket", createSocket))               ||
+       (NULL == CU_add_test(pSuite, "createUDPConnection", createUDPConnection)) ||
+       (NULL == CU_add_test(pSuite, "vectorTest", vectorInit))                   ||
+       (NULL == CU_add_test(pSuite, "startTest", startTest))                     ||
+       (NULL == CU_add_test(pSuite, "findTest", findTest))                       ||
+       (NULL == CU_add_test(pSuite, "dontFindTest", dontFindTest))               ||
+       (NULL == CU_add_test(pSuite, "findReturnesName", findReturnsName))        ||
+       (NULL == CU_add_test(pSuite, "findReturnesPort", findReturnsPort))        ||
+       (NULL == CU_add_test(pSuite, "startSessionTest", startSessionTest))
+      ) 
+  {
     CU_cleanup_registry();
     return CU_get_error();
   }

@@ -23,10 +23,8 @@ int create_socket(int type, int protocol)
   return to_ret;
 }//end create socket
 
-struct connection new_connection(int connection_type)
-{
-  struct connection to_ret;
-  
+void new_connection(int connection_type, Connection *to_ret)
+{ 
   struct sockaddr_in my_address;
     //holds connection information
   
@@ -41,30 +39,31 @@ struct connection new_connection(int connection_type)
     my_socket = create_socket(SOCK_STREAM,IPPROTO_TCP);
   }
   
-  to_ret.conn = my_address;
-  to_ret.socket = my_socket;
+  to_ret->socket = my_socket;
 
   if( my_socket != -1 )
   {
     bzero(&my_address, sizeof(my_address));
       //allocates memory
-
-    my_address.sin_family = AF_INET;
+    to_ret->c.sin_family = AF_INET;
       //sets connection type or connection family 
-    my_address.sin_addr.s_addr = htonl(INADDR_ANY);
+    to_ret->c.sin_addr.s_addr = htonl(INADDR_ANY);
       //local host address htonol creates network format
-    my_address.sin_port = htons(0);
+    to_ret->c.sin_port = htons(0);
       //a port of zero asks the os to pick a port for us
       //htons formats network format
 
     if(bind(my_socket, (struct sockaddr*) &my_address, sizeof(my_address)) < 0)
     {
+      to_ret->c.sin_port = -1;
       perror("Bind failed");
-    }//end bind socket
-    
-  }//end check for socket
-  
-  return to_ret;
+    }//end bind socket 
+  }
+  else
+  {
+    to_ret->c.sin_port = -1;
+  }
+
 }//end bind socket
 
 void start_new_session(int port)
@@ -83,13 +82,15 @@ void start_new_session(int port)
 }
 
 //TODO fix this horrible horrible memory leak
+//TODO add tcp error checking
 void my_start(char* s_name, char* to_client)
 {
   if( my_find(s_name) == NULL )
   {
+    Connection tcp_connection;
     Node* to_array;
     char* tmp;
-    struct connection tcp_connection = new_connection(0);
+    new_connection(0, &tcp_connection);
       //TODO create session server
     tmp = (char*)malloc(sizeof(s_name));
       //allocate space for the name
@@ -103,7 +104,7 @@ void my_start(char* s_name, char* to_client)
     
     vector_append(running_sessions, to_array);
     
-    sprintf(to_client, "%d", tcp_connection.conn.sin_port);
+    sprintf(to_client, "%d", tcp_connection.c.sin_port);
       //set the message to be sent back to the client
   }
   else
@@ -147,50 +148,55 @@ void my_terminate(char* s_name, char* to_client)
 
 void run_chat_coordinator()
 {
+  Connection myself;
+  
   struct sockaddr_in client_address;
     //stores information about the client
   socklen_t addrlen = sizeof(client_address);
     //stores the length of the client address
   char buf[NAME_SIZE];
     //will store the message from the client
-  char to_client[BUF_SIZE];
+  char* to_client;
     //will store the message to be sent to the client
   int msg_len = 0;
     //stores the length of the message from the client
-  struct connection myself = new_connection(1);
+  new_connection(1, &myself);
     //attempt to bind socket
   int socket = myself.socket;
-    //attempt to create a socket
-  printf("UDP Port Number: %d \n", myself.conn.sin_port);
+    //get socket
+  printf("UDP Port Number: %d \n", myself.c.sin_port);
     //output the port number of the new connection
   
   vector_init(running_sessions);
     //inits vector that stores all sessions
 
-  while(1)
+  if( DEBUG != 1)
   {
-    msg_len = recvfrom(socket, buf, BUF_SIZE, 0, 
-                      (struct sockaddr *)&client_address, &addrlen);
-      //wait for client to send a message
+    while(1)
+    {
+      msg_len = recvfrom(socket, buf, BUF_SIZE, 0, 
+                        (struct sockaddr *)&client_address, &addrlen);
+        //wait for client to send a message
 
-    if(strcmp(buf, START) == 0)
-    {
-      my_start(buf, to_client);
-    }
-    else if(strcmp(buf, FIND) == 0)
-    {
-      my_find(buf);
-    }
-    else if(strcmp(buf, TERM) == 0)
-    {
-      my_terminate(buf, to_client);
-    }
-    else
-    {
-      perror("Unknown msg received");
-    }//determine action to take based on client request
+      if(strcmp(buf, START) == 0)
+      {
+        my_start(buf, to_client);
+      }
+      else if(strcmp(buf, FIND) == 0)
+      {
+        my_find(buf);
+      }
+      else if(strcmp(buf, TERM) == 0)
+      {
+        my_terminate(buf, to_client);
+      }
+      else
+      {
+        perror("Unknown msg received");
+      }//determine action to take based on client request
 
-  }//listen for commands
+    }//listen for commands
+  }
   
 }//end run_chat_coordinator
 

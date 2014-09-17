@@ -121,6 +121,11 @@
       <item path="chat_coordinator.h" ex="false" tool="3" flavor2="0">
       </item>
       <folder path="TestFiles/f1">
+        <cTool>
+          <incFile>
+            <pElem>chat_coordinator.h</pElem>
+          </incFile>
+        </cTool>
         <linkerTool>
           <output>${TESTDIR}/TestFiles/f1</output>
           <linkerLibItems>
