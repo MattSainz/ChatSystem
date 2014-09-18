@@ -5,7 +5,7 @@
                    displayName="Header Files"
                    projectFiles="true">
       <itemPath>chat_coordinator.h</itemPath>
-      <itemPath>vector.h</itemPath>
+      <itemPath>list.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -15,7 +15,7 @@
                    displayName="Source Files"
                    projectFiles="true">
       <itemPath>chat_coordinator.c</itemPath>
-      <itemPath>vector.c</itemPath>
+      <itemPath>list.c</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
                    displayName="Test Files"
@@ -62,11 +62,11 @@
           </linkerLibItems>
         </linkerTool>
       </folder>
+      <item path="list.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="list.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="tests/chat_test.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="vector.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="vector.h" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
     <conf name="Release" type="1">
@@ -101,11 +101,11 @@
           </linkerLibItems>
         </linkerTool>
       </folder>
+      <item path="list.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="list.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="tests/chat_test.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="vector.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="vector.h" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
     <conf name="ChatCoordinator" type="1">
@@ -133,11 +133,11 @@
           </linkerLibItems>
         </linkerTool>
       </folder>
+      <item path="list.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="list.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="tests/chat_test.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="vector.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="vector.h" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
   </confs>

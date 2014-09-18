@@ -4,7 +4,7 @@
 #include <unistd.h>
 #include <netinet/in.h>
 #include "uthash.h"
-#include "vector.h"
+#include "list.h"
 
 #define BUF_SIZE 80
 #define NAME_SIZE 8
@@ -12,12 +12,19 @@
 #define FIND "Find"
 #define TERM "Terminate"
 #define DEBUG 1
+#define running_sessions
 
 typedef struct 
 {
   struct sockaddr_in c;
   int socket;
 }Connection;
+
+typedef struct
+{
+  int port;
+  char* s_name;
+}Node;
 
 /*
  * creates socket

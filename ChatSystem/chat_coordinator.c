@@ -7,9 +7,6 @@
 
 #include "chat_coordinator.h"
 
-Vector* running_sessions;
-    //stores all of the currently running sessions 
-
 int create_socket(int type, int protocol)
 {
   int to_ret = 0;
@@ -89,20 +86,19 @@ void my_start(char* s_name, char* to_client)
   {
     Connection tcp_connection;
     Node* to_array;
-    char* tmp;
+    
     new_connection(0, &tcp_connection);
       //TODO create session server
-    tmp = (char*)malloc(sizeof(s_name));
-      //allocate space for the name
-    tmp = s_name;
-      //store the name
-    to_array = (Node*)malloc(sizeof(tmp));
-      //make memory for this new information
-    to_array->session = tmp;
-      //set the memory 
-    to_array->port = tcp_connection.socket;
+ 
+    to_array = malloc(sizeof(Node));
     
-    vector_append(running_sessions, to_array);
+    to_array->s_name = malloc(sizeof(s_name));
+    
+    to_array->port = tcp_connection.c.sin_port;
+    
+    strcpy(to_array->s_name, s_name);
+    
+    list_push(running_sessions, to_array);
     
     sprintf(to_client, "%d", tcp_connection.c.sin_port);
       //set the message to be sent back to the client
@@ -117,27 +113,17 @@ void my_start(char* s_name, char* to_client)
 
  Node* my_find(char* s_name)
 {
-  int i = 0;
-    //index into vector
   Node* to_ret = NULL;
     //the session does not already exist
-  Node* session;
   
-  while( i < running_sessions->size)
-  {
-    session = vector_get(running_sessions, i);
-    
-    if( strcmp(s_name, session->session) == 0 )
+  list_each_elem(running_sessions, node)
+  {  
+    if( strcmp(s_name, *node->s_name) == 0 )
     {
-      to_ret = session;
-        //a session with the same name was found  
-        //note returning a pointer should work 
-        //because it was stored on the heap earlier
-      break;
-        //you only need to find one session 
-    }
-    i++;
-  }
+      to_ret = *node->s_name;
+        //a session with the same name was found    
+    }//if the element is found get its information
+  }//end search for element
   
   return to_ret;
 }//end my find
@@ -167,8 +153,9 @@ void run_chat_coordinator()
   printf("UDP Port Number: %d \n", myself.c.sin_port);
     //output the port number of the new connection
   
-  vector_init(running_sessions);
+  list(Node*, running_sessions);
     //inits vector that stores all sessions
+  memset (&list, 0, sizeof (running_sessions));
 
   if( DEBUG != 1)
   {

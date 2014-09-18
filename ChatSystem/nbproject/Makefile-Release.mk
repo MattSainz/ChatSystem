@@ -36,7 +36,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 # Object Files
 OBJECTFILES= \
 	${OBJECTDIR}/chat_coordinator.o \
-	${OBJECTDIR}/vector.o
+	${OBJECTDIR}/list.o
 
 # Test Directory
 TESTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}/tests
@@ -74,10 +74,10 @@ ${OBJECTDIR}/chat_coordinator.o: chat_coordinator.c
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/chat_coordinator.o chat_coordinator.c
 
-${OBJECTDIR}/vector.o: vector.c 
+${OBJECTDIR}/list.o: list.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/vector.o vector.c
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/list.o list.c
 
 # Subprojects
 .build-subprojects:
@@ -108,17 +108,17 @@ ${OBJECTDIR}/chat_coordinator_nomain.o: ${OBJECTDIR}/chat_coordinator.o chat_coo
 	    ${CP} ${OBJECTDIR}/chat_coordinator.o ${OBJECTDIR}/chat_coordinator_nomain.o;\
 	fi
 
-${OBJECTDIR}/vector_nomain.o: ${OBJECTDIR}/vector.o vector.c 
+${OBJECTDIR}/list_nomain.o: ${OBJECTDIR}/list.o list.c 
 	${MKDIR} -p ${OBJECTDIR}
-	@NMOUTPUT=`${NM} ${OBJECTDIR}/vector.o`; \
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/list.o`; \
 	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
 	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.c) -O2 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/vector_nomain.o vector.c;\
+	    $(COMPILE.c) -O2 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/list_nomain.o list.c;\
 	else  \
-	    ${CP} ${OBJECTDIR}/vector.o ${OBJECTDIR}/vector_nomain.o;\
+	    ${CP} ${OBJECTDIR}/list.o ${OBJECTDIR}/list_nomain.o;\
 	fi
 
 # Run Test Targets
