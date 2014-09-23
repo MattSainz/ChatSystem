@@ -84,7 +84,7 @@ void start_new_session(int port , int socket)
     //store port in arg array
     if( port != 0 )
     {
-      char port_s[ (len = (int)((ceil(log10(socket))+1)*sizeof(char)))];
+      char port_s[(len = (int)((ceil(log10(socket))+1)*sizeof(char)))];
       snprintf(port_s, len, "%d", port);
       args[1] = port_s;
     }
