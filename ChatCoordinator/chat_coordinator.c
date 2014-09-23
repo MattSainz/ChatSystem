@@ -76,53 +76,42 @@ Connection* new_connection(int connection_type)
 void start_new_session(int port , int socket)
 {
     int pid;
-    char* args[1];
+    char* args[4];
+    args[0] = SERVER_NAME;
+    args[3] = '\0';
     int len;
-    
-    int tmp1 = port;
-    int tmp2 = socket;
-    
+
     //store port in arg array
     if( port != 0 )
     {
-      len = 1;
-      while( tmp1 > 0 ){ tmp1 /= 10; len++; }
-      char port_s[len];
-      snprintf(port_s,len,"%d", port);
-      args[0] = port_s;
-    }
-    else
-    {
-      args[0] = "0";
-    }
-    
-    //store socket in arg array 
-    if( socket != 0 )
-    {
-      len = 1;
-      while( tmp2 > 0 ){ tmp2 /= 10; len++; }
-      char socket_s[len];
-      snprintf(socket_s,len,"%d", socket);
-      args[1] = socket_s;   
+      char port_s[ (len = (int)((ceil(log10(socket))+1)*sizeof(char)))];
+      snprintf(port_s, len, "%d", port);
+      args[1] = port_s;
     }
     else
     {
       args[1] = "0";
     }
     
+    //store socket in arg array 
+    if( socket != 0 )
+    {
+      char socket_s[(len = (int)((ceil(log10(socket))+1)*sizeof(char)))];
+      snprintf(socket_s, len, "%d", socket);
+      args[2] = socket_s;   
+    }
+    else
+    {
+      args[2] = "0";
+    }
+    
+    printf("Port: %s Socket: %s \n", args[1], args[2]);
     if( (pid = fork()) == 0)
     {
-      printf("Hello From Child \n");
-      
+      printf("Port: %s Socket: %s \n", args[1], args[2]);
       chdir(SERVER_PATH);
       
-      char cwd[1024];
-       if (getcwd(cwd, sizeof(cwd)) != NULL)
-           fprintf(stdout, "Current working dir: %s\n", cwd);
-       else
-           perror("getcwd() error");
-      
-      if ( execv("sessionserver", args) < 0 )
+      if ( execv(SERVER_NAME, args) < 0 )
       {
         printf("Error making child \n");
       }

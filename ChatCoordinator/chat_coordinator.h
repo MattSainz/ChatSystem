@@ -1,8 +1,16 @@
+#ifndef CHAT_COORDINATOR_H
+#define CHAT_COORDINATOR_H
+
+#ifdef _cplusplus
+extern "C" {
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/socket.h>
 #include <unistd.h>
+#include <math.h>
 #include <netinet/in.h>
 #include "dict.h"
 
@@ -14,14 +22,14 @@
 #define TERM "Terminate"
 #define DEBUG 1
 #define running_sessions
-#define SERVER_PATH "../../../../SessionServer/dist/Debug/GNU-Linux-x86"
+#define SERVER_PATH "../../../../SessionServer/dist/Debug/GNU-Linux-x86/"
+#define SERVER_NAME "./sessionserver"
 
 typedef struct 
 {
   int port;
   int socket;
 }Connection;
-
 
 /*
  * creates socket
@@ -65,4 +73,7 @@ void start_new_session(int port, int socket);
  * calls calls the correct method
  */
 void run_chat_coordinator();
+#ifdef _cplusplus
+#endif
 
+#endif
