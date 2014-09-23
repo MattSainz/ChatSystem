@@ -78,15 +78,20 @@ void start_new_session(int port , int socket)
     int pid;
     char* args[4];
     args[0] = SERVER_NAME;
-    args[3] = '\0';
+    args[3] = (char *) 0;
     int len;
 
+    int tmp1 = port;
+    int tmp2 = socket;
+    
     //store port in arg array
     if( port != 0 )
     {
-      char port_s[(len = (int)((ceil(log10(socket))+1)*sizeof(char)))];
-      snprintf(port_s, len, "%d", port);
-      args[1] = port_s;
+      len = 1;
+      while( tmp1 > 0 ){ tmp1 /= 10; len++; }
+      char port_s[len];
+      snprintf(port_s,"%d", port);
+      args[0] = port_s;
     }
     else
     {
@@ -96,9 +101,11 @@ void start_new_session(int port , int socket)
     //store socket in arg array 
     if( socket != 0 )
     {
-      char socket_s[(len = (int)((ceil(log10(socket))+1)*sizeof(char)))];
-      snprintf(socket_s, len, "%d", socket);
-      args[2] = socket_s;   
+      len = 1;
+      while( tmp2 > 0 ){ tmp2 /= 10; len++; }
+      char socket_s[len];
+      snprintf(socket_s,len,"%d", socket);
+      args[1] = socket_s;   
     }
     else
     {
