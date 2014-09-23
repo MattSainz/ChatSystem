@@ -30,17 +30,9 @@ void createSocket()
 
 void createUDPConnection() 
 {
-  Connection test;
-  new_connection(1, &test);
-  CU_ASSERT( test.c.sin_port != -1);
-}
-
-void vectorInit() 
-{
-  Vector* test;
-  vector_init(test);
-  CU_ASSERT_PTR_NOT_NULL(test);
-
+  Connection* test;
+  test = new_connection(1);
+  CU_ASSERT( test->port != -1);
 }
 
 void runTest()
@@ -52,41 +44,24 @@ void runTest()
 void startTest()
 {
   char* test = "test";
-  char test_ret[BUF_SIZE];
-  my_start(test, &test_ret);
-  CU_ASSERT_STRING_NOT_EQUAL(test_ret,"");
+  int test_ret  = my_start(test);
+  CU_ASSERT(test_ret > -1);
 }
 
 void findTest()
 {
   char* test = "test";
-  Node* nodeTest;
-  nodeTest = my_find(test);
-  CU_ASSERT_PTR_NULL(nodeTest);
+  int result;
+  result = my_find(test);
+  CU_ASSERT(result != -1);
 }
 
 void dontFindTest()
 {
   char* test = "foo";
-  Node* nodeTest;
-  nodeTest = my_find(test);
-  CU_ASSERT_PTR_NOT_NULL(nodeTest);
-}
-
-void findReturnsName()
-{
-  char* test = "test";
-  Node* nodeTest;
-  nodeTest = my_find(test);
-  CU_ASSERT_STRING_EQUAL(nodeTest->session,"test");
-}
-
-void findReturnsPort()
-{
-  char* test = "test";
-  Node* nodeTest;
-  nodeTest = my_find(test);
-  CU_ASSERT(nodeTest->port >= 0);
+  int result;
+  result = my_find(test);
+  CU_ASSERT(result == -1);
 }
 
 void startSessionTest()
@@ -113,12 +88,9 @@ int main() {
   if (
        (NULL == CU_add_test(pSuite, "createSocket", createSocket))               ||
        (NULL == CU_add_test(pSuite, "createUDPConnection", createUDPConnection)) ||
-       (NULL == CU_add_test(pSuite, "vectorTest", vectorInit))                   ||
        (NULL == CU_add_test(pSuite, "startTest", startTest))                     ||
        (NULL == CU_add_test(pSuite, "findTest", findTest))                       ||
        (NULL == CU_add_test(pSuite, "dontFindTest", dontFindTest))               ||
-       (NULL == CU_add_test(pSuite, "findReturnesName", findReturnsName))        ||
-       (NULL == CU_add_test(pSuite, "findReturnesPort", findReturnsPort))        ||
        (NULL == CU_add_test(pSuite, "startSessionTest", startSessionTest))
       ) 
   {

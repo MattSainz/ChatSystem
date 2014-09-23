@@ -7,21 +7,29 @@ CND_BASEDIR=`pwd`
 CND_BUILDDIR=build
 CND_DISTDIR=dist
 # Debug configuration
-CND_PLATFORM_Debug=GNU-MacOSX
-CND_ARTIFACT_DIR_Debug=dist/Debug/GNU-MacOSX
-CND_ARTIFACT_NAME_Debug=chatcoordinator
-CND_ARTIFACT_PATH_Debug=dist/Debug/GNU-MacOSX/chatcoordinator
-CND_PACKAGE_DIR_Debug=dist/Debug/GNU-MacOSX/package
-CND_PACKAGE_NAME_Debug=chatcoordinator.tar
-CND_PACKAGE_PATH_Debug=dist/Debug/GNU-MacOSX/package/chatcoordinator.tar
+CND_PLATFORM_Debug=GNU-Linux-x86
+CND_ARTIFACT_DIR_Debug=dist/Debug/GNU-Linux-x86
+CND_ARTIFACT_NAME_Debug=chatsystem
+CND_ARTIFACT_PATH_Debug=dist/Debug/GNU-Linux-x86/chatsystem
+CND_PACKAGE_DIR_Debug=dist/Debug/GNU-Linux-x86/package
+CND_PACKAGE_NAME_Debug=chatsystem.tar
+CND_PACKAGE_PATH_Debug=dist/Debug/GNU-Linux-x86/package/chatsystem.tar
 # Release configuration
-CND_PLATFORM_Release=GNU-MacOSX
-CND_ARTIFACT_DIR_Release=dist/Release/GNU-MacOSX
-CND_ARTIFACT_NAME_Release=chatcoordinator
-CND_ARTIFACT_PATH_Release=dist/Release/GNU-MacOSX/chatcoordinator
-CND_PACKAGE_DIR_Release=dist/Release/GNU-MacOSX/package
-CND_PACKAGE_NAME_Release=chatcoordinator.tar
-CND_PACKAGE_PATH_Release=dist/Release/GNU-MacOSX/package/chatcoordinator.tar
+CND_PLATFORM_Release=GNU-Linux-x86
+CND_ARTIFACT_DIR_Release=dist/Release/GNU-Linux-x86
+CND_ARTIFACT_NAME_Release=chatsystem
+CND_ARTIFACT_PATH_Release=dist/Release/GNU-Linux-x86/chatsystem
+CND_PACKAGE_DIR_Release=dist/Release/GNU-Linux-x86/package
+CND_PACKAGE_NAME_Release=chatsystem.tar
+CND_PACKAGE_PATH_Release=dist/Release/GNU-Linux-x86/package/chatsystem.tar
+# ChatCoordinator configuration
+CND_PLATFORM_ChatCoordinator=GNU-Linux-x86
+CND_ARTIFACT_DIR_ChatCoordinator=dist/ChatCoordinator/GNU-Linux-x86
+CND_ARTIFACT_NAME_ChatCoordinator=chatsystem
+CND_ARTIFACT_PATH_ChatCoordinator=dist/ChatCoordinator/GNU-Linux-x86/chatsystem
+CND_PACKAGE_DIR_ChatCoordinator=dist/ChatCoordinator/GNU-Linux-x86/package
+CND_PACKAGE_NAME_ChatCoordinator=chatsystem.tar
+CND_PACKAGE_PATH_ChatCoordinator=dist/ChatCoordinator/GNU-Linux-x86/package/chatsystem.tar
 #
 # include compiler specific variables
 #

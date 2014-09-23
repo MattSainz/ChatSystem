@@ -1,11 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <sys/socket.h>
 #include <unistd.h>
 #include <netinet/in.h>
-#include "uthash.h"
-#include "list.h"
+#include "dict.h"
 
+#define LEN(x) (sizeof(x)/ sizeof(x[0]))
 #define BUF_SIZE 80
 #define NAME_SIZE 8
 #define START "Start"
@@ -13,18 +14,14 @@
 #define TERM "Terminate"
 #define DEBUG 1
 #define running_sessions
+#define SERVER_PATH "../../../../SessionServer/dist/Debug/GNU-Linux-x86"
 
 typedef struct 
 {
-  struct sockaddr_in c;
+  int port;
   int socket;
 }Connection;
 
-typedef struct
-{
-  int port;
-  char* s_name;
-}Node;
 
 /*
  * creates socket
@@ -35,7 +32,7 @@ int create_socket(int type, int protocol);
  * creates a new UDB connection and binds
  * it to the port we created
  */
-void new_connection(int connection_type, Connection* to_ret);
+Connection* new_connection(int connection_type);
 
 /*
  * Create a chat server if the secession doesn't already exist 
@@ -44,24 +41,24 @@ void new_connection(int connection_type, Connection* to_ret);
  * a message is returned to the client with the address of the TCP server
  * and the port number
  */
-void my_start( char* s_name, char* to_client );
+int my_start( char* s_name);
 
 /* 
  * Looks for a server with the name passed in 
  * if found then returnes the server's address (port)
  * otherwise -1 is returned
  */
-Node* my_find( char* s_name);
+int my_find( char* s_name);
 
 /*
  * Terminates the chat session
  */
-void my_terminate( char* s_name, char* to_client );
+int my_terminate( char* s_name);
 
 /*
  * Create a new SessionServer
  */
-void start_new_session(int port);
+void start_new_session(int port, int socket);
 
 /*
  * Waits for clients to call and then 

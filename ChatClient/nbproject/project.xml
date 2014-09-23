@@ -3,10 +3,10 @@
     <type>org.netbeans.modules.cnd.makeproject</type>
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/make-project/1">
-            <name>ChatCoordinator</name>
+            <name>ChatClient</name>
             <c-extensions>c</c-extensions>
             <cpp-extensions/>
-            <header-extensions>h</header-extensions>
+            <header-extensions/>
             <sourceEncoding>UTF-8</sourceEncoding>
             <make-dep-projects/>
             <sourceRootList/>
@@ -17,10 +17,6 @@
                 </confElem>
                 <confElem>
                     <name>Release</name>
-                    <type>1</type>
-                </confElem>
-                <confElem>
-                    <name>ChatCoordinator</name>
                     <type>1</type>
                 </confElem>
             </confList>

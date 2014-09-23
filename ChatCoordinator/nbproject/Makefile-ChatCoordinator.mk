@@ -21,9 +21,9 @@ FC=gfortran
 AS=as
 
 # Macros
-CND_PLATFORM=GNU-MacOSX
-CND_DLIB_EXT=dylib
-CND_CONF=Debug
+CND_PLATFORM=GNU-Linux-x86
+CND_DLIB_EXT=so
+CND_CONF=ChatCoordinator
 CND_DISTDIR=dist
 CND_BUILDDIR=build
 
@@ -36,7 +36,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 # Object Files
 OBJECTFILES= \
 	${OBJECTDIR}/chat_coordinator.o \
-	${OBJECTDIR}/list.o
+	${OBJECTDIR}/dict.o
 
 # Test Directory
 TESTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}/tests
@@ -72,12 +72,12 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/chatsystem: ${OBJECTFILES}
 ${OBJECTDIR}/chat_coordinator.o: chat_coordinator.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -g -include chat_coordinator.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/chat_coordinator.o chat_coordinator.c
+	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/chat_coordinator.o chat_coordinator.c
 
-${OBJECTDIR}/list.o: list.c 
+${OBJECTDIR}/dict.o: dict.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -g -include chat_coordinator.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/list.o list.c
+	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/dict.o dict.c
 
 # Subprojects
 .build-subprojects:
@@ -103,22 +103,22 @@ ${OBJECTDIR}/chat_coordinator_nomain.o: ${OBJECTDIR}/chat_coordinator.o chat_coo
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.c) -g -include chat_coordinator.h -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/chat_coordinator_nomain.o chat_coordinator.c;\
+	    $(COMPILE.c) -g -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/chat_coordinator_nomain.o chat_coordinator.c;\
 	else  \
 	    ${CP} ${OBJECTDIR}/chat_coordinator.o ${OBJECTDIR}/chat_coordinator_nomain.o;\
 	fi
 
-${OBJECTDIR}/list_nomain.o: ${OBJECTDIR}/list.o list.c 
+${OBJECTDIR}/dict_nomain.o: ${OBJECTDIR}/dict.o dict.c 
 	${MKDIR} -p ${OBJECTDIR}
-	@NMOUTPUT=`${NM} ${OBJECTDIR}/list.o`; \
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/dict.o`; \
 	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
 	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.c) -g -include chat_coordinator.h -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/list_nomain.o list.c;\
+	    $(COMPILE.c) -g -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/dict_nomain.o dict.c;\
 	else  \
-	    ${CP} ${OBJECTDIR}/list.o ${OBJECTDIR}/list_nomain.o;\
+	    ${CP} ${OBJECTDIR}/dict.o ${OBJECTDIR}/dict_nomain.o;\
 	fi
 
 # Run Test Targets
