@@ -35,7 +35,54 @@ char* send_command(char* command, char* msg){
   return NULL;
 }//end send_command
 
-void runner(int ip, int port)
+int
+errexit(const char *format, ...)
+{
+        va_list args;
+
+        va_start(args, format);
+        vfprintf(stderr, format, args);
+        va_end(args);
+        exit(1);
+}
+
+void connect_sock(const char* host, const char* portnum, int con_type)
+{
+  struct hostent  *phe;   /* pointer to host information entry    */
+  struct sockaddr_in sin; /* an Internet endpoint address         */
+  int     s;              /* socket descriptor                    */
+
+
+  memset(&sin, 0, sizeof(sin));
+  sin.sin_family = AF_INET;
+
+  if ((sin.sin_port=htons((unsigned short)atoi(portnum))) == 0)
+          errexit("can't get \"%s\" port number\n", portnum);
+
+  if ( phe = gethostbyname(host) )
+          memcpy(&sin.sin_addr, phe->h_addr, phe->h_length);
+  else if ( (sin.sin_addr.s_addr = inet_addr(host)) == INADDR_NONE )
+          errexit("can't get \"%s\" host entry\n", host);
+
+  if( 0 == con_type )
+  {  
+    s = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
+  }
+  else
+  {
+    s = socket(PF_INET, SOCK_STREAM, IPPROTO_UDP);
+  }
+  
+  if (s < 0)
+          errexit("can't create socket: %s\n", strerror(errno));
+
+  if (connect(s, (struct sockaddr *)&sin, sizeof(sin)) < 0)
+          errexit("can't connect to %s.%s: %s\n", host, portnum,
+                  strerror(errno));
+  return s;
+}//end connect_sock
+
+void runner(char* ip, char* port)
 {
   int input;
   char input_s[MSG_SIZE];
@@ -102,7 +149,7 @@ int main(int argc, char** argv)
     printf("Host Address: %s Host Port: %s \n", argv[1], argv[2]);
     //TODO check for formatting
  
-    runner( atoi(argv[1]), atoi(argv[2]) ); 
+    runner( argv[1], argv[2] ); 
   }
   else
   {
