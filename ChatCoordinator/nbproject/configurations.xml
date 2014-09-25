@@ -50,7 +50,7 @@
           </incFile>
         </cTool>
         <linkerTool>
-          <output>/Users/Matthias/Code/Git/ChatSystem/Build/chatcoordinator</output>
+          <output>/home/user/Code/ChatSystem/Build/chatcoordinator</output>
         </linkerTool>
       </compileType>
       <item path="chat_coordinator.c" ex="false" tool="0" flavor2="0">

@@ -24,7 +24,7 @@ extern "C" {
 #define LEAVE    "7"
 #define DEBUG 0
 #define running_sessions
-#define SERVER_PATH "~/Code/Git/ChatSystem/Build"
+#define SERVER_PATH "/home/user/Code/Git/ChatSystem/Build"
 #define SERVER_NAME "./sessionserver"
 
 typedef struct 

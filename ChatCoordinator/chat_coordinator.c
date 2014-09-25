@@ -22,7 +22,7 @@ int create_socket(int type, int protocol)
   return to_ret;
 }//end create socket
 
-Connection* new_connection(int connection_type)
+Connection* new_connection()
 { 
   struct sockaddr_in my_address;
     //holds connection information
@@ -32,16 +32,9 @@ Connection* new_connection(int connection_type)
   to_ret = (Connection*)malloc(sizeof(Connection));
   
   int my_socket;
-  if( connection_type == 1)
-  {
-     my_socket = create_socket(SOCK_DGRAM, IPPROTO_UDP);
-      //attempt to create a socket
-  }
-  else
-  {
-    my_socket = create_socket(SOCK_STREAM,IPPROTO_TCP);
-  }
-  
+
+  my_socket = create_socket(SOCK_STREAM,IPPROTO_TCP);
+
   to_ret->socket = my_socket;
 
   if( my_socket != -1 )
@@ -120,7 +113,7 @@ int my_start(char* s_name)
   
   if( my_find(s_name) == -1 )
   {
-    Connection* tcp_connection = new_connection(0);    
+    Connection* tcp_connection = new_connection();    
       //TODO create session server
     DictInsert(sessions, s_name, tcp_connection->port);
     
@@ -128,7 +121,8 @@ int my_start(char* s_name)
     
     if( tcp_connection != NULL ) free(tcp_connection);
     
-    to_ret = 1;
+    to_ret = tcp_connection->port;
+    
   }//end check for existing session
   
   return to_ret;
@@ -140,7 +134,7 @@ int my_start(char* s_name)
     //the session does not already exist
   if( DictSearch(sessions,s_name) != 0 )
   {
-    to_ret = 1;
+    to_ret = DictSearch(sessions,s_name);
   }
   return to_ret;
 }//end my find
@@ -156,83 +150,110 @@ int my_terminate(char* s_name)
   return to_ret;
 }//end my terminate
 
+void error(char *msg) {
+  perror(msg);
+  exit(1);
+}
+
 void run_chat_coordinator()
 {
-  Connection* myself;
+  //run_chat_coordinator();
+  int sockfd; /* socket */
+  int BUFSIZE = 80;
+  int portno; /* port to listen on */
+  int clientlen; /* byte size of client's address */
+  struct sockaddr_in serveraddr; /* server's addr */
   
-  struct sockaddr_in client_address;
-    //stores information about the client
-  socklen_t addrlen = sizeof(client_address);
-    //stores the length of the client address
-  char buf[MSG_SIZE];
-    //will store the message from the client
-  char to_ret[MSG_SIZE];
-  char *command; 
-  char* arg; 
-  char* tmp;
-  
-    //will store the message to be sent to the client
-  int msg_len = 0;
-    //stores the length of the message from the client
-  myself = new_connection(1);
-    //attempt to bind socket
-  int socket = myself->socket;
-    //get socket
-  printf("UDP Port Number: %d Socket: %d\n", myself->port, myself->socket);
-    //output the port number of the new connection
-  
-  if( myself != NULL ) free(myself);
+  struct hostent *hostp; /* client host info */
+  char buf[BUFSIZE]; /* message buf */
+  int optval; /* flag value for setsockopt */
+  int n; /* message byte size */
 
+  portno = htons(0);
+
+  sockfd = socket(AF_INET, SOCK_DGRAM, 0);
+  if (sockfd < 0) 
+    error("ERROR opening socket");
+
+  optval = 1;
+  setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, 
+	     (const void *)&optval , sizeof(int));
+
+  bzero((char *) &serveraddr, sizeof(serveraddr));
+  serveraddr.sin_family = AF_INET;
+  serveraddr.sin_addr.s_addr = htonl(INADDR_ANY);
+  serveraddr.sin_port = htons((unsigned short)portno);
+
+  if (bind(sockfd, (struct sockaddr *) &serveraddr, 
+	   sizeof(serveraddr)) < 0) 
+    error("ERROR on binding");
+
+    struct sockaddr_in sin;
+    socklen_t len = sizeof(sin);
+    if (getsockname(sockfd, (struct sockaddr *)&sin, &len) == -1)
+        perror("getsockname");
+    else
+    printf("port number %d\n", ntohs(sin.sin_port));
+
+  struct sockaddr_in clientaddr; /* client addr */
+  clientlen = sizeof(clientaddr);
+  
   sessions = DictCreate();
+  
+  char *command;
+  char *arg;
+  char to_ret[BUFSIZE];
+  char *tmp;
   
   if( DEBUG != 1)
   {
     while(1)
     {
       printf("Waiting For connection \n");
-      while ( (msg_len = recvfrom(socket, buf, MSG_SIZE, 0, 
-                        (struct sockaddr *)&client_address, &addrlen)) != -1)
-      {
-        printf("Got message \n");
+      
+      bzero(buf, BUFSIZE);
+      bzero(to_ret, BUFSIZE);
+      n = recvfrom(sockfd, buf, BUFSIZE, 0,
+	(struct sockaddr *) &clientaddr, &clientlen);
+      
+      printf("Got message \n");
         //wait for client to send a message
-        tmp = buf;
+      tmp = buf;
 
-        command = strsep(buf, ",");
-        printf("Command: %s \n", command);
+      command = strsep(&tmp, ",");
+      printf("Command: %s \n", command);
 
-        arg     = strsep(buf, ",");
-        printf("Arg: %s \n", arg);
+      arg     = strsep(&tmp, ",");
+      printf("Arg: %s \n", arg);
 
-        if(strcmp(command, START) == 0)
+      if(strcmp(command, START) == 0)
+      {
+        if( my_start(arg) != -1 )
         {
-
-          if( my_start(arg) != -1 )
-          {
-            sprintf(to_ret,"%d",DictSearch(sessions, arg));
-          }
-          else
-          {
-            sprintf(to_ret,"%d",-1);
-          }
-          printf("Worked %s: \n", to_ret);
-          sendto(socket, to_ret, sizeof(to_ret), 0, (struct sockaddr *) &client_address,
-                  sizeof(struct sockaddr_in));
-        }
-        else if(strcmp(command, FIND) == 0)
-        {
-          sprintf(to_ret,"%d",my_find(arg));    
-        }
-        else if(strcmp(command, LEAVE) == 0)
-        {
-          my_terminate(arg);
+          sprintf(to_ret,"%d",DictSearch(sessions, arg));
         }
         else
         {
-          perror("Unknown msg received");
-        }//determine action to take based on client request
+          sprintf(to_ret,"%d",-1);
+        }
+        n = sendto(sockfd, to_ret, BUFSIZE, 0, 
+            (struct sockaddr *) &clientaddr, clientlen);
       }
-    }//listen for commands
-    
+      else if(strcmp(command, FIND) == 0)
+      {
+        sprintf(to_ret,"%d",my_find(arg));
+        n = sendto(sockfd, to_ret, strlen(to_ret), 0, 
+            (struct sockaddr *) &clientaddr, clientlen);
+      }
+      else if(strcmp(command, LEAVE) == 0)
+      {
+        my_terminate(arg);
+      }
+      else
+      {
+        perror("Unknown msg received");
+      }//determine action to take based on client request
+    }  
     if( buf != NULL ) free(buf);
   }
   else
@@ -240,11 +261,14 @@ void run_chat_coordinator()
     my_start("test");
   }
   
+  close(sockfd);
+  
 }//end run_chat_coordinator
 
 /*
  * Standard main method
  */
+
 int main(int argc, char** argv)
 {  
   run_chat_coordinator();

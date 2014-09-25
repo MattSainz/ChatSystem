@@ -36,7 +36,7 @@ extern "C" {
 
   char *current_session;
   
-  struct sockaddr_in addr; /* an Internet endpoint address         */
+  struct sockaddr_in addr, remote_addr; /* an Internet endpoint address         */
   
   int tcp_socket;
   

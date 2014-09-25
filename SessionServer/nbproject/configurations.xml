@@ -39,7 +39,7 @@
       </toolsSet>
       <compileType>
         <linkerTool>
-          <output>/Users/Matthias/Code/Git/ChatSystem/Build/sessionserver</output>
+          <output>/home/user/Code/ChatSystem/Build/sessionserver</output>
         </linkerTool>
       </compileType>
       <item path="dict.c" ex="false" tool="0" flavor2="0">

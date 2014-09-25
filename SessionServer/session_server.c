@@ -28,21 +28,21 @@ void my_send(char *msg, int len, int client)
     
 }//end send
 
-void my_wait()
+void my_wait(int socket)
 {
-  printf("Waiting for connections \n");
+  printf("Waiting for connections on %d \n",socket);
   struct sockaddr_in client;
   int client_socket;
   int client_len = sizeof(client);
   
-  if( listen(tcp_socket, MAXPENDING) < 0 )
+  if( listen(socket, MAXPENDING) < 0 )
   {
     printf("Error too many clients waiting \n");
   }
   
   while(1)
   {
-    if( (client_socket = accept(tcp_socket, (struct sockaddr *) &client,
+    if( (client_socket = accept(socket, (struct sockaddr *) &client,
                                   &client_len)) < 0)
     {
       printf("Error Connecting to Client");
@@ -66,10 +66,8 @@ void process( int socket )
     printf("Error getting msg from client \n");
   }
 
-  while( msg_size > 0 )
-  {
-
-  }
+  printf("Msg: %s", msg_c);
+  exit(0);
 }//end process
 
 int main(int argc, char** argv) 
@@ -81,7 +79,7 @@ int main(int argc, char** argv)
     tcp_socket = atoi( argv[2] );
     printf("Running Server \n");
     printf("Port: %d Socket: %d \n", tcp_port, tcp_socket);
-    //my_wait();
+    my_wait(tcp_socket);
   }
   return to_ret;
 }//end main

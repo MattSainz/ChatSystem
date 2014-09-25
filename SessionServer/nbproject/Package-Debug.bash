@@ -6,14 +6,14 @@
 
 # Macros
 TOP=`pwd`
-CND_PLATFORM=GNU-MacOSX
+CND_PLATFORM=GNU-Linux-x86
 CND_CONF=Debug
 CND_DISTDIR=dist
 CND_BUILDDIR=build
-CND_DLIB_EXT=dylib
+CND_DLIB_EXT=so
 NBTMPDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}/tmp-packaging
 TMPDIRNAME=tmp-packaging
-OUTPUT_PATH=/Users/Matthias/Code/Git/ChatSystem/Build/sessionserver
+OUTPUT_PATH=/home/user/Code/ChatSystem/Build/sessionserver
 OUTPUT_BASENAME=sessionserver
 PACKAGE_TOP_DIR=sessionserver/
 

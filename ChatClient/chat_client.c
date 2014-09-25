@@ -1,72 +1,109 @@
 #include "chat_client.h"
 
+void error(char *msg) {
+    perror(msg);
+    exit(0);
+}
 
-void session_start(char* s_name, char* host, char* port )
+char* send_command_server(char* command, char* msg, char*host, char* port)
 {
+   
+   int sockfd,n;
+   struct sockaddr_in serveraddr,cliaddr;
+   char sendline[1000];
+   char recvline[1000];
+   struct hostent *server;
+
+   sockfd=socket(AF_INET,SOCK_STREAM,0);
+
+   server = gethostbyname(host);
+   if (server == NULL) {
+     fprintf(stderr,"ERROR, no such host as %s\n", host);
+     exit(0);
+   }
+
+    /* build the server's Internet address */
+    bzero((char *) &serveraddr, sizeof(serveraddr));
+    serveraddr.sin_family = AF_INET;
+    bcopy((char *)server->h_addr, 
+    (char *)&serveraddr.sin_addr.s_addr, server->h_length);
+    serveraddr.sin_port = htons(atoi(port));
+
+   connect(sockfd, (struct sockaddr *)&serveraddr, sizeof(serveraddr));
+
+   int msg_len = sizeof(command)+sizeof(msg)+sizeof(char)*2;
+   char to_server[msg_len];
+   bzero(to_server, msg_len);
+   snprintf(to_server, sizeof(to_server), "%s,%s", command, msg); 
+    
+   sendto(sockfd,to_server,strlen(to_server),0,
+          (struct sockaddr *)&serveraddr,sizeof(serveraddr));
+    
+   n=recvfrom(sockfd,recvline,10000,0,NULL,NULL);
+   recvline[n]=0;
+   printf("Got %s: \n", recvline);
+   close(sockfd);
+  
+}
+
+char* send_command_coord(char* command, char* msg, char* host, char* port){
   //connect_sock(host, port, 1);
-  struct hostent  *phe;   /* pointer to host information entry    */
-  int     s;              /* socket descriptor                    */
+  int sockfd, portno, n;
+  int serverlen;
+  struct sockaddr_in serveraddr;
+  struct hostent *server;
+  char *hostname;
+  char buf[80];
+ 
+  hostname = host;
+  portno = atoi(port);
 
-  struct sockaddr_in foo;
-  memset(&foo, 0, sizeof(foo));
-  foo.sin_family = AF_INET;
-  foo.sin_port   = htons(32453);
- // if ((foo.sin_port=htons(32453) == 0))
-   //       errexit("can't get \"%s\" port number\n", port);
+  /* socket: create the socket */
+  sockfd = socket(AF_INET, SOCK_DGRAM, 0);
+  if (sockfd < 0) 
+      error("ERROR opening socket");
 
-  if ( (phe = gethostbyname(host)) )
-    memcpy(&foo.sin_addr, phe->h_addr, phe->h_length);
-  else if ( (foo.sin_addr.s_addr = inet_addr(host)) == INADDR_NONE )
-    errexit("can't get \"%s\" host entry\n", host);
-
-    s = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP);
-    udp_socket = s;
-  
-  if (s < 0)
-  {
-    errexit("can't create socket: %s\n", strerror(errno));
-    tcp_socket = -1;
-    udp_socket = -1;
+  /* gethostbyname: get the server's DNS entry */
+  server = gethostbyname(hostname);
+  if (server == NULL) {
+      fprintf(stderr,"ERROR, no such host as %s\n", hostname);
+      exit(0);
   }
-  printf("Addr: %d \n", foo.sin_port);
+
+    /* build the server's Internet address */
+  bzero((char *) &serveraddr, sizeof(serveraddr));
+  serveraddr.sin_family = AF_INET;
+  bcopy((char *)server->h_addr, 
+     (char *)&serveraddr.sin_addr.s_addr, server->h_length);
+  serveraddr.sin_port = htons(portno);
+    
+    /* get a message from the user */
   
-  //if (connect(s, (struct sockaddr *)&foo, sizeof(foo)) < 0)
-    //      errexit("can't connect to %s.%s: %s\n", host, port,
-      //            strerror(errno));
-  
-  int len = sizeof(struct sockaddr_in);
-  
-  int msg_len = sizeof(s_name)+sizeof(START)+sizeof(char)*2;
+  int msg_len = sizeof(command)+sizeof(msg)+sizeof(char)*2;
   char to_server[msg_len];
-  snprintf(to_server, sizeof(to_server), "%s,%s", START, s_name);
+  bzero(to_server, msg_len);
+  snprintf(to_server, sizeof(to_server), "%s,%s", command, msg);
   
-  printf("Addr: %d\n", foo.sin_port);
+  /* send the message to the server */
+  serverlen = sizeof(serveraddr);
+  n = sendto(sockfd, to_server, strlen(to_server), 0, &serveraddr, serverlen);
+  if (n < 0) 
+    error("ERROR in sendto");
+    
+  /* print the server's reply */
+  bzero(buf,80);
+  n = recvfrom(sockfd, buf, 80, 0, &serveraddr, &serverlen);
+  if (n < 0) 
+    error("ERROR in recvfrom");
   
-  if (sendto(s, "test", sizeof("test"), 0, (struct sockaddr *) &foo,
-                len) == -1)
-  {
-    printf("Bad \n");
-  }
+  printf("From server: %s \n", buf);
   
-  printf("In here \n");
+  close(sockfd);
   
-  int n;
-  char buf[MSG_SIZE];
-  bzero(buf,MSG_SIZE);
-  
-  while ( (n = recvfrom(udp_socket, buf, MSG_SIZE, 0, (struct sockaddr *) &foo,
-           &len)) != -1)
-  {
-    printf("From ClientCoord: ");
-    fputs(buf, stdout);
-  }
-  printf("Stuck \n");
-}//end session_start
-  
-void session_join(char* s_name, char* host, char* port )
-{
-  
-}//end session_join
+  char* to_ret = (char*)malloc(sizeof(to_ret));
+  sprintf(to_ret,"%s", buf);
+  return to_ret;
+}//end send_command
 
 void submit(char* msg){
   
@@ -89,60 +126,27 @@ void session_exit(){
   
 }//end session_exit
 
-char* send_command(char* command, char* msg){
-  return NULL;
-}//end send_command
-
-int errexit(const char *format, ...)
+void session_start(char* s_name, char* host, char* port )
 {
-        va_list args;
+    char* reply = send_command_coord(START, s_name, host, port);
+    if(strcmp(reply,"-1") == 0)
+    {
+      printf("Session %s already exists, cannot start \n", s_name);
+    }
+    else
+    {
+      printf("Session %s created...attempting to join \n", s_name);
+      session_join(s_name, host, reply);
+    }
+    free(reply);
+}//end session_start
 
-        va_start(args, format);
-        vfprintf(stderr, format, args);
-        va_end(args);
-        exit(1);
-}
-
-void connect_sock(const char* host, const char* portnum, int con_type)
+void session_join(char* s_name, char* host, char* port )
 {
-  struct hostent  *phe;   /* pointer to host information entry    */
-  int     s;              /* socket descriptor                    */
-
-
-  memset(&addr, 0, sizeof(addr));
-  addr.sin_family = AF_INET;
-
-  if ((addr.sin_port=htons((unsigned short)atoi(portnum))) == 0)
-          errexit("can't get \"%s\" port number\n", portnum);
-
-  if ( (phe = gethostbyname(host)) )
-          memcpy(&addr.sin_addr, phe->h_addr, phe->h_length);
-  else if ( (addr.sin_addr.s_addr = inet_addr(host)) == INADDR_NONE )
-          errexit("can't get \"%s\" host entry\n", host);
-
-  if( 0 == con_type )
-  {  
-    s = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
-    tcp_socket = s;
-  }
-  else
-  {
-    s = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP);
-    udp_socket = s;
-  }
-  
-  if (s < 0)
-  {
-    errexit("can't create socket: %s\n", strerror(errno));
-    tcp_socket = -1;
-    udp_socket = -1;
-  }
-  printf("Addr: %d \n", addr.sin_port);
-  
-  if (connect(s, (struct sockaddr *)&addr, sizeof(addr)) < 0)
-          errexit("can't connect to %s.%s: %s\n", host, portnum,
-                  strerror(errno));
-}//end connect_sock
+   printf("Joining %s \n", port);
+   char* tmp = "hello server";
+   send_command_server(JOIN,tmp,host,port);
+}//end session_join
 
 void runner(char* ip, char* port)
 {
@@ -211,6 +215,8 @@ int main(int argc, char** argv)
     printf("Host Address: %s Host Port: %s \n", argv[1], argv[2]);
     //TODO check for formatting 
     runner( argv[1], argv[2] ); 
+    
+    return 0;
   }
   else
   {

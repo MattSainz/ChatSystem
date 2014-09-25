@@ -21,8 +21,8 @@ FC=gfortran
 AS=as
 
 # Macros
-CND_PLATFORM=GNU-MacOSX
-CND_DLIB_EXT=dylib
+CND_PLATFORM=GNU-Linux-x86
+CND_DLIB_EXT=so
 CND_CONF=Debug
 CND_DISTDIR=dist
 CND_BUILDDIR=build
@@ -63,11 +63,11 @@ LDLIBSOPTIONS=
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
-	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk /Users/Matthias/Code/Git/ChatSystem/Build/chatcoordinator
+	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk /home/user/Code/ChatSystem/Build/chatcoordinator
 
-/Users/Matthias/Code/Git/ChatSystem/Build/chatcoordinator: ${OBJECTFILES}
-	${MKDIR} -p /Users/Matthias/Code/Git/ChatSystem/Build
-	${LINK.c} -o /Users/Matthias/Code/Git/ChatSystem/Build/chatcoordinator ${OBJECTFILES} ${LDLIBSOPTIONS}
+/home/user/Code/ChatSystem/Build/chatcoordinator: ${OBJECTFILES}
+	${MKDIR} -p /home/user/Code/ChatSystem/Build
+	${LINK.c} -o /home/user/Code/ChatSystem/Build/chatcoordinator ${OBJECTFILES} ${LDLIBSOPTIONS}
 
 ${OBJECTDIR}/chat_coordinator.o: chat_coordinator.c 
 	${MKDIR} -p ${OBJECTDIR}
@@ -133,7 +133,7 @@ ${OBJECTDIR}/dict_nomain.o: ${OBJECTDIR}/dict.o dict.c
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}
 	${RM} -r ${CND_BUILDDIR}/${CND_CONF}
-	${RM} /Users/Matthias/Code/Git/ChatSystem/Build/chatcoordinator
+	${RM} /home/user/Code/ChatSystem/Build/chatcoordinator
 
 # Subprojects
 .clean-subprojects:
