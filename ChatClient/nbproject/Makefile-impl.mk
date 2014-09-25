@@ -24,7 +24,7 @@ CLEAN_SUBPROJECTS=${CLEAN_SUBPROJECTS_${SUBPROJECTS}}
 
 
 # Project Name
-PROJECTNAME=ChatCoordinator
+PROJECTNAME=ChatClient
 
 # Active Configuration
 DEFAULTCONF=Debug

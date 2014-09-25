@@ -49,6 +49,9 @@
             <pElem>chat_coordinator.h</pElem>
           </incFile>
         </cTool>
+        <linkerTool>
+          <output>/Users/Matthias/Code/Git/ChatSystem/Build/chatcoordinator</output>
+        </linkerTool>
       </compileType>
       <item path="chat_coordinator.c" ex="false" tool="0" flavor2="0">
       </item>
@@ -88,6 +91,9 @@
         <asmTool>
           <developmentMode>5</developmentMode>
         </asmTool>
+        <linkerTool>
+          <output>/Users/Matthias/Code/Git/ChatSystem/Build/chatcoordinator</output>
+        </linkerTool>
       </compileType>
       <item path="chat_coordinator.c" ex="false" tool="0" flavor2="0">
       </item>
@@ -110,11 +116,17 @@
     </conf>
     <conf name="ChatCoordinator" type="1">
       <toolsSet>
-        <compilerSet>default</compilerSet>
+        <compilerSet>GNU|GNU</compilerSet>
         <dependencyChecking>true</dependencyChecking>
-        <rebuildPropChanged>false</rebuildPropChanged>
+        <rebuildPropChanged>true</rebuildPropChanged>
       </toolsSet>
       <compileType>
+        <linkerTool>
+          <output>/Users/Matthias/Code/Git/ChatSystem/Build/chatcoordinator</output>
+          <linkerLibItems>
+            <linkerLibStdlibItem>Mathematics</linkerLibStdlibItem>
+          </linkerLibItems>
+        </linkerTool>
       </compileType>
       <item path="chat_coordinator.c" ex="false" tool="0" flavor2="0">
       </item>

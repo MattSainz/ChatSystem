@@ -4,6 +4,7 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
+      <itemPath>chat_client.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -12,7 +13,7 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
-      <itemPath>main.c</itemPath>
+      <itemPath>chat_client.c</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
                    displayName="Test Files"
@@ -42,6 +43,10 @@
       </toolsSet>
       <compileType>
       </compileType>
+      <item path="chat_client.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="chat_client.h" ex="false" tool="3" flavor2="0">
+      </item>
       <folder path="TestFiles/f1">
         <linkerTool>
           <output>${TESTDIR}/TestFiles/f1</output>
@@ -50,8 +55,6 @@
           </linkerLibItems>
         </linkerTool>
       </folder>
-      <item path="main.c" ex="false" tool="0" flavor2="0">
-      </item>
       <item path="tests/newcunittest.c" ex="false" tool="0" flavor2="0">
       </item>
     </conf>
@@ -75,6 +78,10 @@
           <developmentMode>5</developmentMode>
         </asmTool>
       </compileType>
+      <item path="chat_client.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="chat_client.h" ex="false" tool="3" flavor2="0">
+      </item>
       <folder path="TestFiles/f1">
         <linkerTool>
           <output>${TESTDIR}/TestFiles/f1</output>
@@ -83,8 +90,6 @@
           </linkerLibItems>
         </linkerTool>
       </folder>
-      <item path="main.c" ex="false" tool="0" flavor2="0">
-      </item>
       <item path="tests/newcunittest.c" ex="false" tool="0" flavor2="0">
       </item>
     </conf>

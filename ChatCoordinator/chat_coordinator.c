@@ -57,11 +57,13 @@ Connection* new_connection(int connection_type)
       //a port of zero asks the os to pick a port for us
       //htons formats network format
 
-    if(bind(my_socket, (struct sockaddr*) &my_address, sizeof(my_address)) < 0)
+    if(bind(my_socket, (struct sockaddr*) &my_address, sizeof(my_address)) == -1)
     {
-      my_address.sin_port = -1;
-      perror("Bind failed");
+      printf("Error binding socekt \n");
+      to_ret->port = -1;
     }//end bind socket 
+    socklen_t len = sizeof(my_socket);
+    getsockname(my_socket, (struct sockaddr *)&my_address, &len);
   }
   else
   {
@@ -75,61 +77,39 @@ Connection* new_connection(int connection_type)
 
 void start_new_session(int port , int socket)
 {
-    int pid;
-    char* args[4];
-    args[0] = SERVER_NAME;
-    args[3] = (char *) 0;
-    int len;
+  int pid;
 
-    int tmp1 = port;
-    int tmp2 = socket;
-    
-    //store port in arg array
-    if( port != 0 )
+  char* args[4];
+  args[0] = SERVER_NAME;
+  args[3] = NULL;
+
+  char port_s[200];
+  sprintf(port_s,"%d",port);
+  printf("Port: %s \n", port_s);
+
+  char socket_s[200];
+  sprintf(socket_s,"%d", socket);
+  printf("Socket: %s\n", socket_s);
+
+  args[1] = port_s;
+  args[2] = socket_s;
+
+  if( (pid = fork()) == 0)
+  {
+    chdir(SERVER_PATH);
+
+    if ( execv(SERVER_NAME, args) < 0 )
     {
-      len = 1;
-      while( tmp1 > 0 ){ tmp1 /= 10; len++; }
-      char port_s[len];
-      snprintf(port_s,"%d", port);
-      args[0] = port_s;
+      printf("Error making child \n");
     }
-    else
-    {
-      args[1] = "0";
-    }
-    
-    //store socket in arg array 
-    if( socket != 0 )
-    {
-      len = 1;
-      while( tmp2 > 0 ){ tmp2 /= 10; len++; }
-      char socket_s[len];
-      snprintf(socket_s,len,"%d", socket);
-      args[1] = socket_s;   
-    }
-    else
-    {
-      args[2] = "0";
-    }
-    
-    printf("Port: %s Socket: %s \n", args[1], args[2]);
-    if( (pid = fork()) == 0)
-    {
-      printf("Port: %s Socket: %s \n", args[1], args[2]);
-      chdir(SERVER_PATH);
-      
-      if ( execv(SERVER_NAME, args) < 0 )
-      {
-        printf("Error making child \n");
-      }
-      
-      exit(-1);
-    }
-    else if( pid == -1 )
-    {
-      perror("Error Forking\n");
-    }
-    printf("In parent \n");
+
+    exit(-1);
+  }
+  else if( pid == -1 )
+  {
+    perror("Error Forking\n");
+  }
+  printf("Pid of server: %d \n",pid);
 }
 
 //TODO fix this horrible horrible memory leak
@@ -184,9 +164,13 @@ void run_chat_coordinator()
     //stores information about the client
   socklen_t addrlen = sizeof(client_address);
     //stores the length of the client address
-  char buf[NAME_SIZE];
+  char buf[MSG_SIZE];
     //will store the message from the client
-  char* to_ret;
+  char to_ret[MSG_SIZE];
+  char *command; 
+  char* arg; 
+  char* tmp;
+  
     //will store the message to be sent to the client
   int msg_len = 0;
     //stores the length of the message from the client
@@ -205,72 +189,56 @@ void run_chat_coordinator()
   {
     while(1)
     {
-      msg_len = recvfrom(socket, buf, BUF_SIZE, 0, 
-                        (struct sockaddr *)&client_address, &addrlen);
-        //wait for client to send a message
-
-      if(strcmp(buf, START) == 0)
+      printf("Waiting For connection \n");
+      while ( (msg_len = recvfrom(socket, buf, MSG_SIZE, 0, 
+                        (struct sockaddr *)&client_address, &addrlen)) != -1)
       {
-     
-        if( my_start(buf) != -1 )
+        printf("Got message \n");
+        //wait for client to send a message
+        tmp = buf;
+
+        command = strsep(buf, ",");
+        printf("Command: %s \n", command);
+
+        arg     = strsep(buf, ",");
+        printf("Arg: %s \n", arg);
+
+        if(strcmp(command, START) == 0)
         {
-            sprintf(to_ret,"%d",DictSearch(sessions, buf));
+
+          if( my_start(arg) != -1 )
+          {
+            sprintf(to_ret,"%d",DictSearch(sessions, arg));
+          }
+          else
+          {
+            sprintf(to_ret,"%d",-1);
+          }
+          printf("Worked %s: \n", to_ret);
+          sendto(socket, to_ret, sizeof(to_ret), 0, (struct sockaddr *) &client_address,
+                  sizeof(struct sockaddr_in));
+        }
+        else if(strcmp(command, FIND) == 0)
+        {
+          sprintf(to_ret,"%d",my_find(arg));    
+        }
+        else if(strcmp(command, LEAVE) == 0)
+        {
+          my_terminate(arg);
         }
         else
         {
-            to_ret = -1;
-        }
+          perror("Unknown msg received");
+        }//determine action to take based on client request
       }
-      else if(strcmp(buf, FIND) == 0)
-      {
-        sprintf(to_ret,"%d",my_find(buf));    
-      }
-      else if(strcmp(buf, TERM) == 0)
-      {
-        my_terminate(buf);
-      }
-      else
-      {
-        perror("Unknown msg received");
-      }//determine action to take based on client request
-
     }//listen for commands
+    
+    if( buf != NULL ) free(buf);
   }
   else
   {
-    char * foo = "test";
-    int test_start = my_start(foo);
-    if( test_start != -1 )
-    {
-        printf("Start All good \n");
-    }
-    else
-    {
-        printf("Start Not so Good \n");
-    }
-    
-    int test_find = my_find(foo);
-    if( test_find != 0 )
-    {
-        printf("Dict and find working \n");
-    }
-    else
-    {
-        printf("Dict and find not so good \n");
-    }
-    
-    int test_term = my_terminate(foo);
-    if( test_term != -1 )
-    {
-        printf("Term working \n");
-    }
-    else
-    {
-        printf("Term not so good \n");
-    }
-      
+    my_start("test");
   }
-  
   
 }//end run_chat_coordinator
 

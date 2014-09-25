@@ -23,6 +23,14 @@
   //max pending connections
 #define BUF 1024
 
+#define GET_NEXT "1"
+#define GET_ALL  "2"
+#define START    "3"
+#define SUBMIT   "4"
+#define JOIN     "5"
+#define FIND     "6"
+#define LEAVE    "7"
+
 int tcp_socket;
   //socket made by session server 
 int tcp_port;
@@ -64,7 +72,7 @@ void my_send(char *msg, int len, int client);
  * Listens for a client then handles
  * the request with the proper method
  */
-void wait();
+void my_wait();
 
 /*
  * Takes the client and figures out what to do 

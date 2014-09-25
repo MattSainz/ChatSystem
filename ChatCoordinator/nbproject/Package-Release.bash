@@ -13,7 +13,7 @@ CND_BUILDDIR=build
 CND_DLIB_EXT=dylib
 NBTMPDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}/tmp-packaging
 TMPDIRNAME=tmp-packaging
-OUTPUT_PATH=${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/chatcoordinator
+OUTPUT_PATH=/Users/Matthias/Code/Git/ChatSystem/Build/chatcoordinator
 OUTPUT_BASENAME=chatcoordinator
 PACKAGE_TOP_DIR=chatcoordinator/
 

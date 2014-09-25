@@ -15,14 +15,16 @@ extern "C" {
 #include "dict.h"
 
 #define LEN(x) (sizeof(x)/ sizeof(x[0]))
-#define BUF_SIZE 80
+    
+#define MSG_SIZE 80
 #define NAME_SIZE 8
-#define START "Start"
-#define FIND "Find"
-#define TERM "Terminate"
-#define DEBUG 1
+#define START    "3"
+#define JOIN     "5"
+#define FIND     "6"
+#define LEAVE    "7"
+#define DEBUG 0
 #define running_sessions
-#define SERVER_PATH "../../../../SessionServer/dist/Debug/GNU-Linux-x86/"
+#define SERVER_PATH "~/Code/Git/ChatSystem/Build"
 #define SERVER_NAME "./sessionserver"
 
 typedef struct 
@@ -73,6 +75,8 @@ void start_new_session(int port, int socket);
  * calls calls the correct method
  */
 void run_chat_coordinator();
+
+
 #ifdef _cplusplus
 #endif
 

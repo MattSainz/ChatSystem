@@ -21,8 +21,8 @@ FC=gfortran
 AS=as
 
 # Macros
-CND_PLATFORM=GNU-Linux-x86
-CND_DLIB_EXT=so
+CND_PLATFORM=GNU-MacOSX
+CND_DLIB_EXT=dylib
 CND_CONF=Debug
 CND_DISTDIR=dist
 CND_BUILDDIR=build
@@ -57,11 +57,11 @@ LDLIBSOPTIONS=
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
-	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/sessionserver
+	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk /Users/Matthias/Code/Git/ChatSystem/Build/sessionserver
 
-${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/sessionserver: ${OBJECTFILES}
-	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
-	${LINK.c} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/sessionserver ${OBJECTFILES} ${LDLIBSOPTIONS}
+/Users/Matthias/Code/Git/ChatSystem/Build/sessionserver: ${OBJECTFILES}
+	${MKDIR} -p /Users/Matthias/Code/Git/ChatSystem/Build
+	${LINK.c} -o /Users/Matthias/Code/Git/ChatSystem/Build/sessionserver ${OBJECTFILES} ${LDLIBSOPTIONS}
 
 ${OBJECTDIR}/dict.o: dict.c 
 	${MKDIR} -p ${OBJECTDIR}
@@ -79,7 +79,7 @@ ${OBJECTDIR}/session_server.o: session_server.c
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}
 	${RM} -r ${CND_BUILDDIR}/${CND_CONF}
-	${RM} ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/sessionserver
+	${RM} /Users/Matthias/Code/Git/ChatSystem/Build/sessionserver
 
 # Subprojects
 .clean-subprojects:

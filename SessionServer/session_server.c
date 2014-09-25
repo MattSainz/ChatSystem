@@ -28,8 +28,9 @@ void my_send(char *msg, int len, int client)
     
 }//end send
 
-void wait()
+void my_wait()
 {
+  printf("Waiting for connections \n");
   struct sockaddr_in client;
   int client_socket;
   int client_len = sizeof(client);
@@ -55,19 +56,20 @@ void wait()
 
 void process( int socket )
 {
-    char msg_c[BUF];
-      //buffer that will hold client msg
-    int msg_size;
-    
-    if( (msg_size = recv( socket, msg_c, BUF, 0)) < 0)
-    {
-        printf("Error getting msg from client \n");
-    }
-    
-    while( msg_size > 0 )
-    {
-      
-    }
+  printf("Processing client request \n");
+  char msg_c[BUF];
+    //buffer that will hold client msg
+  int msg_size;
+
+  if( (msg_size = recv( socket, msg_c, BUF, 0)) < 0)
+  {
+    printf("Error getting msg from client \n");
+  }
+
+  while( msg_size > 0 )
+  {
+
+  }
 }//end process
 
 int main(int argc, char** argv) 
@@ -77,8 +79,9 @@ int main(int argc, char** argv)
   {
     tcp_port   = atoi( argv[1] );
     tcp_socket = atoi( argv[2] );
-    printf("Port: %d Socket: %d", tcp_port, tcp_socket);
-    //listen();
+    printf("Running Server \n");
+    printf("Port: %d Socket: %d \n", tcp_port, tcp_socket);
+    //my_wait();
   }
   return to_ret;
 }//end main

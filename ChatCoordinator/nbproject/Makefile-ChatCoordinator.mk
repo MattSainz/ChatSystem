@@ -59,22 +59,22 @@ FFLAGS=
 ASFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=
+LDLIBSOPTIONS=-lm
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
-	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/chatcoordinator
+	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk /Users/Matthias/Code/Git/ChatSystem/Build/chatcoordinator
 
-${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/chatcoordinator: ${OBJECTFILES}
-	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
-	${LINK.c} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/chatcoordinator ${OBJECTFILES} ${LDLIBSOPTIONS}
+/Users/Matthias/Code/Git/ChatSystem/Build/chatcoordinator: ${OBJECTFILES}
+	${MKDIR} -p /Users/Matthias/Code/Git/ChatSystem/Build
+	${LINK.c} -o /Users/Matthias/Code/Git/ChatSystem/Build/chatcoordinator ${OBJECTFILES} ${LDLIBSOPTIONS}
 
-${OBJECTDIR}/chat_coordinator.o: chat_coordinator.c 
+${OBJECTDIR}/chat_coordinator.o: nbproject/Makefile-${CND_CONF}.mk chat_coordinator.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/chat_coordinator.o chat_coordinator.c
 
-${OBJECTDIR}/dict.o: dict.c 
+${OBJECTDIR}/dict.o: nbproject/Makefile-${CND_CONF}.mk dict.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/dict.o dict.c
@@ -133,7 +133,7 @@ ${OBJECTDIR}/dict_nomain.o: ${OBJECTDIR}/dict.o dict.c
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}
 	${RM} -r ${CND_BUILDDIR}/${CND_CONF}
-	${RM} ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/chatcoordinator
+	${RM} /Users/Matthias/Code/Git/ChatSystem/Build/chatcoordinator
 
 # Subprojects
 .clean-subprojects:
