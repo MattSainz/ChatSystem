@@ -24,8 +24,6 @@
       </nativedebugger>
       <runprofile version="9">
         <runcommandpicklist>
-          <runcommandpicklistitem>"${OUTPUT_PATH}" localhost 29147</runcommandpicklistitem>
-          <runcommandpicklistitem>"${OUTPUT_PATH}" 0.0.0.0 61161</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}" localhost 61161</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}" 127.0.0.1 61161</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}" 0.0.0.0 32453</runcommandpicklistitem>
@@ -34,8 +32,10 @@
           <runcommandpicklistitem>"${OUTPUT_PATH}" localhost 21422</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}" localhost 54581</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}" localhost 56855</runcommandpicklistitem>
+          <runcommandpicklistitem>"${OUTPUT_PATH}" localhost  39372</runcommandpicklistitem>
+          <runcommandpicklistitem>"${OUTPUT_PATH}" localhost  43283 </runcommandpicklistitem>
         </runcommandpicklist>
-        <runcommand>"${OUTPUT_PATH}" localhost 56855</runcommand>
+        <runcommand>"${OUTPUT_PATH}" localhost  43283</runcommand>
         <rundir></rundir>
         <buildfirst>true</buildfirst>
         <terminal-type>0</terminal-type>

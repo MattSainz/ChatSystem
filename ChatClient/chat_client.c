@@ -5,7 +5,7 @@ void error(char *msg) {
     exit(0);
 }
 
-char* send_command_server(char* command, char* msg, char*host, char* port)
+char* send_command_server(char* command, char* msg, char* host, char* port)
 {
    
    int sockfd,n;
@@ -27,7 +27,7 @@ char* send_command_server(char* command, char* msg, char*host, char* port)
     serveraddr.sin_family = AF_INET;
     bcopy((char *)server->h_addr, 
     (char *)&serveraddr.sin_addr.s_addr, server->h_length);
-    serveraddr.sin_port = htons(atoi(port));
+    serveraddr.sin_port = atoi(port);
 
    connect(sockfd, (struct sockaddr *)&serveraddr, sizeof(serveraddr));
 
@@ -36,8 +36,7 @@ char* send_command_server(char* command, char* msg, char*host, char* port)
    bzero(to_server, msg_len);
    snprintf(to_server, sizeof(to_server), "%s,%s", command, msg); 
     
-   sendto(sockfd,to_server,strlen(to_server),0,
-          (struct sockaddr *)&serveraddr,sizeof(serveraddr));
+   send(sockfd,to_server,sizeof(to_server),0);
     
    n=recvfrom(sockfd,recvline,10000,0,NULL,NULL);
    recvline[n]=0;

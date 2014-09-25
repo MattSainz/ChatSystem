@@ -12,7 +12,9 @@ extern "C" {
 #include <unistd.h>
 #include <math.h>
 #include <netinet/in.h>
+#include <sys/errno.h>
 #include "dict.h"
+#include "session_server.h"
 
 #define LEN(x) (sizeof(x)/ sizeof(x[0]))
     
@@ -42,7 +44,7 @@ int create_socket(int type, int protocol);
  * creates a new UDB connection and binds
  * it to the port we created
  */
-Connection* new_connection(int connection_type);
+Connection* new_connection();
 
 /*
  * Create a chat server if the secession doesn't already exist 

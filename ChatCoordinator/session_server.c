@@ -33,9 +33,7 @@ void my_wait(int socket)
   printf("Waiting for connections on %d \n",socket);
   struct sockaddr_in client;
   int client_socket;
-  int client_len = sizeof(client);
-  
-  
+  int client_len = sizeof(client);  
   
   while(1)
   {
@@ -64,5 +62,6 @@ void process( int socket )
   }
 
   printf("Msg: %s", msg_c);
+  close(socket);
   exit(0);
 }//end process

@@ -8,63 +8,50 @@
 #include "chat_coordinator.h"
 
 Dict sessions;
-
-int create_socket(int type, int protocol)
+int
+errexit(const char *format, ...)
 {
-  int to_ret = 0;
-  
-  if ((to_ret = socket(AF_INET, type, protocol)) < 0) 
-  {
-    perror("cannot create socket");
-    to_ret = -1;
-  }
-  
-  return to_ret;
-}//end create socket
+    fprintf("error: %s",format);
+        exit(1);
+}
 
 Connection* new_connection()
 { 
-  struct sockaddr_in my_address;
-    //holds connection information
-  
   Connection *to_ret;
-  
+  int portnum = 0;
   to_ret = (Connection*)malloc(sizeof(Connection));
   
-  int my_socket;
+    struct sockaddr_in sin; /* an Internet endpoint address  */
+    int     s;              /* socket descriptor             */
 
-  my_socket = create_socket(SOCK_STREAM,IPPROTO_TCP);
+    memset(&sin, 0, sizeof(sin));
+    sin.sin_family = AF_INET;
+    sin.sin_addr.s_addr = INADDR_ANY;
 
-  to_ret->socket = my_socket;
+/* Allocate a socket */
+    s = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
+    if (s < 0)
+        errexit("can't create socket: %s\n", strerror(errno));
 
-  if( my_socket != -1 )
-  {
-    bzero(&my_address, sizeof(my_address));
-      //allocates memory
-    
-    my_address.sin_family = AF_INET;
-      //sets connection type or connection family 
-    my_address.sin_addr.s_addr = htonl(INADDR_ANY);
-      //local host address htonol creates network format
-    my_address.sin_port = htons(0);
-      //a port of zero asks the os to pick a port for us
-      //htons formats network format
-
-    if(bind(my_socket, (struct sockaddr*) &my_address, sizeof(my_address)) == -1)
+/* Bind the socket */
+  
+    if (bind(s, (struct sockaddr *)&sin, sizeof(sin)) < 0)
     {
-      printf("Error binding socekt \n");
-      to_ret->port = -1;
-    }//end bind socket 
-    socklen_t len = sizeof(my_socket);
-    getsockname(my_socket, (struct sockaddr *)&my_address, &len);
-  }
-  else
-  {
-    my_address.sin_port = -1;
-  }
-  
-  to_ret->port = my_address.sin_port;
-  
+        errexit("can't bind: %s\n", strerror(errno));
+    }
+    else 
+    {
+        int socklen = sizeof(sin);
+
+        if (getsockname(s, (struct sockaddr *)&sin, &socklen) < 0)
+                errexit("getsockname: %s\n", strerror(errno));
+        printf("New server port number is %d\n", ntohs(sin.sin_port));
+    }
+ 
+    if (listen(s, 5) < 0)
+        errexit("can't listen on %s port: %s\n", portnum, strerror(errno));
+    to_ret->port = sin.sin_port;
+    to_ret->socket = s;
   return to_ret;
 }//end bind socket
 
@@ -72,31 +59,12 @@ void start_new_session(int port , int socket)
 {
   int pid;
 
-  char* args[4];
-  args[0] = SERVER_NAME;
-  args[3] = NULL;
-
-  char port_s[200];
-  sprintf(port_s,"%d",port);
-  printf("Port: %s \n", port_s);
-
-  char socket_s[200];
-  sprintf(socket_s,"%d", socket);
-  printf("Socket: %s\n", socket_s);
-
-  args[1] = port_s;
-  args[2] = socket_s;
-
   if( (pid = fork()) == 0)
   {
-    chdir(SERVER_PATH);
+      printf("Port: %d Socket: %d \n", port, socket);
+      my_wait(socket);
 
-    if ( execv(SERVER_NAME, args) < 0 )
-    {
-      printf("Error making child \n");
-    }
-
-    exit(-1);
+      exit(-1);
   }
   else if( pid == -1 )
   {

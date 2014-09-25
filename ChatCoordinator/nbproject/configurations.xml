@@ -6,6 +6,7 @@
                    projectFiles="true">
       <itemPath>chat_coordinator.h</itemPath>
       <itemPath>dict.h</itemPath>
+      <itemPath>session_server.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -16,6 +17,7 @@
                    projectFiles="true">
       <itemPath>chat_coordinator.c</itemPath>
       <itemPath>dict.c</itemPath>
+      <itemPath>session_server.c</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
                    displayName="Test Files"
@@ -69,6 +71,10 @@
           </linkerLibItems>
         </linkerTool>
       </folder>
+      <item path="session_server.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="session_server.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="tests/chat_test.c" ex="false" tool="0" flavor2="0">
       </item>
     </conf>
@@ -111,6 +117,10 @@
           </linkerLibItems>
         </linkerTool>
       </folder>
+      <item path="session_server.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="session_server.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="tests/chat_test.c" ex="false" tool="0" flavor2="0">
       </item>
     </conf>
@@ -149,6 +159,10 @@
           </linkerLibItems>
         </linkerTool>
       </folder>
+      <item path="session_server.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="session_server.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="tests/chat_test.c" ex="false" tool="0" flavor2="0">
       </item>
     </conf>

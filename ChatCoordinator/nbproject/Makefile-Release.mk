@@ -36,7 +36,8 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 # Object Files
 OBJECTFILES= \
 	${OBJECTDIR}/chat_coordinator.o \
-	${OBJECTDIR}/dict.o
+	${OBJECTDIR}/dict.o \
+	${OBJECTDIR}/session_server.o
 
 # Test Directory
 TESTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}/tests
@@ -79,6 +80,11 @@ ${OBJECTDIR}/dict.o: dict.c
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/dict.o dict.c
 
+${OBJECTDIR}/session_server.o: session_server.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/session_server.o session_server.c
+
 # Subprojects
 .build-subprojects:
 
@@ -119,6 +125,19 @@ ${OBJECTDIR}/dict_nomain.o: ${OBJECTDIR}/dict.o dict.c
 	    $(COMPILE.c) -O2 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/dict_nomain.o dict.c;\
 	else  \
 	    ${CP} ${OBJECTDIR}/dict.o ${OBJECTDIR}/dict_nomain.o;\
+	fi
+
+${OBJECTDIR}/session_server_nomain.o: ${OBJECTDIR}/session_server.o session_server.c 
+	${MKDIR} -p ${OBJECTDIR}
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/session_server.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.c) -O2 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/session_server_nomain.o session_server.c;\
+	else  \
+	    ${CP} ${OBJECTDIR}/session_server.o ${OBJECTDIR}/session_server_nomain.o;\
 	fi
 
 # Run Test Targets
