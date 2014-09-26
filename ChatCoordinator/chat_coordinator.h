@@ -14,6 +14,7 @@ extern "C" {
 #include <netinet/in.h>
 #include <sys/errno.h>
 #include "dict.h"
+#include "dict_string.h"
 #include "session_server.h"
 
 #define LEN(x) (sizeof(x)/ sizeof(x[0]))
@@ -26,7 +27,7 @@ extern "C" {
 #define LEAVE    "7"
 #define DEBUG 0
 #define running_sessions
-#define SERVER_PATH "/home/user/Code/Git/ChatSystem/Build"
+#define SERVER_PATH "/home/user/Code/ChatSystem/Build"
 #define SERVER_NAME "./sessionserver"
 
 typedef struct 

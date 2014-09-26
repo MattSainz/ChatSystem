@@ -37,6 +37,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 OBJECTFILES= \
 	${OBJECTDIR}/chat_coordinator.o \
 	${OBJECTDIR}/dict.o \
+	${OBJECTDIR}/dict_string.o \
 	${OBJECTDIR}/session_server.o
 
 # Test Directory
@@ -79,6 +80,11 @@ ${OBJECTDIR}/dict.o: dict.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/dict.o dict.c
+
+${OBJECTDIR}/dict_string.o: dict_string.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/dict_string.o dict_string.c
 
 ${OBJECTDIR}/session_server.o: session_server.c 
 	${MKDIR} -p ${OBJECTDIR}
@@ -125,6 +131,19 @@ ${OBJECTDIR}/dict_nomain.o: ${OBJECTDIR}/dict.o dict.c
 	    $(COMPILE.c) -O2 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/dict_nomain.o dict.c;\
 	else  \
 	    ${CP} ${OBJECTDIR}/dict.o ${OBJECTDIR}/dict_nomain.o;\
+	fi
+
+${OBJECTDIR}/dict_string_nomain.o: ${OBJECTDIR}/dict_string.o dict_string.c 
+	${MKDIR} -p ${OBJECTDIR}
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/dict_string.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.c) -O2 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/dict_string_nomain.o dict_string.c;\
+	else  \
+	    ${CP} ${OBJECTDIR}/dict_string.o ${OBJECTDIR}/dict_string_nomain.o;\
 	fi
 
 ${OBJECTDIR}/session_server_nomain.o: ${OBJECTDIR}/session_server.o session_server.c 

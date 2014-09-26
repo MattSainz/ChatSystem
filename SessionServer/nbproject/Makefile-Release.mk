@@ -36,6 +36,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 # Object Files
 OBJECTFILES= \
 	${OBJECTDIR}/dict.o \
+	${OBJECTDIR}/dict_1.o \
 	${OBJECTDIR}/session_server.o
 
 
@@ -67,6 +68,11 @@ ${OBJECTDIR}/dict.o: dict.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/dict.o dict.c
+
+${OBJECTDIR}/dict_1.o: dict_1.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/dict_1.o dict_1.c
 
 ${OBJECTDIR}/session_server.o: session_server.c 
 	${MKDIR} -p ${OBJECTDIR}

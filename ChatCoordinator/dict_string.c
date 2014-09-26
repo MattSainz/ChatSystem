@@ -2,7 +2,7 @@
 #include <assert.h>
 #include <string.h>
 
-#include "dict.h"
+#include "dict_string.h"
 
 struct elt 
 {
@@ -105,7 +105,7 @@ growS(Dict d)
   *d = *d2;
   *d2 = swap;
 
-  DictDestroyS(d2);
+  DictDestroy(d2);
 }
 
 /* insert a new key-value pair into an existing dictionary */

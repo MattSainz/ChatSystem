@@ -21,12 +21,12 @@ Connection* new_connection()
   int portnum = 0;
   to_ret = (Connection*)malloc(sizeof(Connection));
   
-    struct sockaddr_in sin; /* an Internet endpoint address  */
-    int     s;              /* socket descriptor             */
+struct sockaddr_in sin; /* an Internet endpoint address  */
+int     s;              /* socket descriptor             */
 
-    memset(&sin, 0, sizeof(sin));
-    sin.sin_family = AF_INET;
-    sin.sin_addr.s_addr = INADDR_ANY;
+memset(&sin, 0, sizeof(sin));
+sin.sin_family = AF_INET;
+sin.sin_addr.s_addr = INADDR_ANY;
 
 /* Allocate a socket */
     s = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
@@ -41,11 +41,11 @@ Connection* new_connection()
     }
     else 
     {
-        int socklen = sizeof(sin);
+      int socklen = sizeof(sin);
 
-        if (getsockname(s, (struct sockaddr *)&sin, &socklen) < 0)
-                errexit("getsockname: %s\n", strerror(errno));
-        printf("New server port number is %d\n", ntohs(sin.sin_port));
+      if (getsockname(s, (struct sockaddr *)&sin, &socklen) < 0)
+              errexit("getsockname: %s\n", strerror(errno));
+      printf("New server port number is %d\n", ntohs(sin.sin_port));
     }
  
     if (listen(s, 5) < 0)
@@ -62,7 +62,7 @@ void start_new_session(int port , int socket)
   if( (pid = fork()) == 0)
   {
       printf("Port: %d Socket: %d \n", port, socket);
-      my_wait(socket);
+      my_wait(socket, port);
 
       exit(-1);
   }
@@ -127,7 +127,6 @@ void run_chat_coordinator()
 {
   //run_chat_coordinator();
   int sockfd; /* socket */
-  int BUFSIZE = 80;
   int portno; /* port to listen on */
   int clientlen; /* byte size of client's address */
   struct sockaddr_in serveraddr; /* server's addr */

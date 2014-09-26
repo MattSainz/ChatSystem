@@ -6,6 +6,7 @@
                    projectFiles="true">
       <itemPath>chat_coordinator.h</itemPath>
       <itemPath>dict.h</itemPath>
+      <itemPath>dict_string.h</itemPath>
       <itemPath>session_server.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
@@ -17,6 +18,7 @@
                    projectFiles="true">
       <itemPath>chat_coordinator.c</itemPath>
       <itemPath>dict.c</itemPath>
+      <itemPath>dict_string.c</itemPath>
       <itemPath>session_server.c</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
@@ -62,6 +64,10 @@
       <item path="dict.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="dict.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="dict_string.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dict_string.h" ex="false" tool="3" flavor2="0">
       </item>
       <folder path="TestFiles/f1">
         <linkerTool>
@@ -109,6 +115,10 @@
       </item>
       <item path="dict.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="dict_string.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dict_string.h" ex="false" tool="3" flavor2="0">
+      </item>
       <folder path="TestFiles/f1">
         <linkerTool>
           <output>${TESTDIR}/TestFiles/f1</output>
@@ -145,6 +155,10 @@
       <item path="dict.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="dict.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="dict_string.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dict_string.h" ex="false" tool="3" flavor2="0">
       </item>
       <folder path="TestFiles/f1">
         <cTool>

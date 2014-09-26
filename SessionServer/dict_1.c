@@ -1,21 +1,20 @@
+
 #include <stdlib.h>
 #include <assert.h>
 #include <string.h>
 
-#include "dict.h"
+#include "dict_1.h"
 
-struct elt 
-{
-  struct elt *next;
-  int key;
-  char *value;
+struct elt {
+    struct elt *next;
+    char *key;
+    int value;
 };
 
-struct dict 
-{
-  int size;           /* size of the pointer table */
-  int n;              /* number of elements stored */
-  struct elt **table;
+struct dict {
+    int size;           /* size of the pointer table */
+    int n;              /* number of elements stored */
+    struct elt **table;
 };
 
 #define INITIAL_SIZE (1024)
@@ -24,7 +23,7 @@ struct dict
 
 /* dictionary initialization code used in both DictCreate and grow */
 Dict
-internalDictCreateS(int size)
+internalDictCreate(int size)
 {
     Dict d;
     int i;
@@ -45,13 +44,13 @@ internalDictCreateS(int size)
 }
 
 Dict
-DictCreateS(void)
+DictCreate(void)
 {
-    return internalDictCreateS(INITIAL_SIZE);
+    return internalDictCreate(INITIAL_SIZE);
 }
 
 void
-DictDestroyS(Dict d)
+DictDestroy(Dict d)
 {
     int i;
     struct elt *e;
@@ -61,7 +60,7 @@ DictDestroyS(Dict d)
         for(e = d->table[i]; e != 0; e = next) {
             next = e->next;
 
-            free(e->value);
+            free(e->key);
             free(e);
         }
     }
@@ -73,58 +72,67 @@ DictDestroyS(Dict d)
 #define MULTIPLIER (97)
 
 static unsigned long
-hash_functionS(int index)
+hash_function(const char *s)
 {
-    return index;
+    unsigned const char *us;
+    unsigned long h;
+
+    h = 0;
+
+    for(us = (unsigned const char *) s; *us; us++) {
+        h = h * MULTIPLIER + *us;
+    }
+
+    return h;
 }
 
 static void
-growS(Dict d)
+grow(Dict d)
 {
-  Dict d2;            /* new dictionary we'll create */
-  struct dict swap;   /* temporary structure for brain transplant */
-  int i;
-  struct elt *e;
+    Dict d2;            /* new dictionary we'll create */
+    struct dict swap;   /* temporary structure for brain transplant */
+    int i;
+    struct elt *e;
 
-  d2 = internalDictCreateS(d->size * GROWTH_FACTOR);
+    d2 = internalDictCreate(d->size * GROWTH_FACTOR);
 
-  for(i = 0; i < d->size; i++) {
-      for(e = d->table[i]; e != 0; e = e->next) {
-          /* note: this recopies everything */
-          /* a more efficient implementation would
-           * patch out the strdups inside DictInsert
-           * to avoid this problem */
-          DictInsertS(d2, e->key, e->value);
-      }
-  }
+    for(i = 0; i < d->size; i++) {
+        for(e = d->table[i]; e != 0; e = e->next) {
+            /* note: this recopies everything */
+            /* a more efficient implementation would
+             * patch out the strdups inside DictInsert
+             * to avoid this problem */
+            DictInsert(d2, e->key, e->value);
+        }
+    }
 
     /* the hideous part */
     /* We'll swap the guts of d and d2 */
     /* then call DictDestroy on d2 */
-  swap = *d;
-  *d = *d2;
-  *d2 = swap;
+    swap = *d;
+    *d = *d2;
+    *d2 = swap;
 
-  DictDestroyS(d2);
+    DictDestroy(d2);
 }
 
 /* insert a new key-value pair into an existing dictionary */
 void
-DictInsertS(Dict d, const int key, const char *value)
+DictInsert(Dict d, const char *key, const int value)
 {
     struct elt *e;
     unsigned long h;
 
-    assert(value);
+    assert(key);
 
     e = malloc(sizeof(*e));
 
     assert(e);
 
-    e->key = key;
-    e->value = strdup(value);
+    e->key = strdup(key);
+    e->value = value;
 
-    h = hash_functionS(key);
+    h = hash_function(key) % d->size;
 
     e->next = d->table[h];
     d->table[h] = e;
@@ -133,19 +141,19 @@ DictInsertS(Dict d, const int key, const char *value)
 
     /* grow table if there is not enough room */
     if(d->n >= d->size * MAX_LOAD_FACTOR) {
-        growS(d);
+        grow(d);
     }
 }
 
 /* return the most recently inserted value associated with a key */
 /* or 0 if no matching key is present */
-const char *
-DictSearchS(Dict d, const int key)
+const int
+DictSearch(Dict d, const char *key)
 {
     struct elt *e;
 
-    for(e = d->table[hash_functionS(key) % d->size]; e != 0; e = e->next) {
-        if(e->key == key) {
+    for(e = d->table[hash_function(key) % d->size]; e != 0; e = e->next) {
+        if(!strcmp(e->key, key)) {
             /* got it */
             return e->value;
         }
@@ -157,20 +165,20 @@ DictSearchS(Dict d, const int key)
 /* delete the most recently inserted record with the given key */
 /* if there is no such record, has no effect */
 void
-DictDeleteS(Dict d, const int key)
+DictDelete(Dict d, const char *key)
 {
     struct elt **prev;          /* what to change when elt is deleted */
     struct elt *e;              /* what to delete */
 
-    for(prev = &(d->table[hash_functionS(key) % d->size]); 
+    for(prev = &(d->table[hash_function(key) % d->size]); 
         *prev != 0; 
         prev = &((*prev)->next)) {
-        if((*prev)->key != key) {
+        if(!strcmp((*prev)->key, key)) {
             /* got it */
             e = *prev;
             *prev = e->next;
 
-            free(e->value);
+            free(e->key);
             free(e);
 
             return;

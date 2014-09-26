@@ -13,6 +13,8 @@
         <gdb_interceptlist>
           <gdbinterceptoptions gdb_all="false" gdb_unhandled="true" gdb_unexpected="true"/>
         </gdb_interceptlist>
+        <gdb_signals>
+        </gdb_signals>
         <gdb_options>
           <DebugOptions>
           </DebugOptions>
@@ -24,18 +26,18 @@
       </nativedebugger>
       <runprofile version="9">
         <runcommandpicklist>
-          <runcommandpicklistitem>"${OUTPUT_PATH}" localhost 61161</runcommandpicklistitem>
-          <runcommandpicklistitem>"${OUTPUT_PATH}" 127.0.0.1 61161</runcommandpicklistitem>
-          <runcommandpicklistitem>"${OUTPUT_PATH}" 0.0.0.0 32453</runcommandpicklistitem>
-          <runcommandpicklistitem>"${OUTPUT_PATH}" 0.0.0.0 1210</runcommandpicklistitem>
-          <runcommandpicklistitem>"${OUTPUT_PATH}" 0.0.0.0 27012</runcommandpicklistitem>
-          <runcommandpicklistitem>"${OUTPUT_PATH}" localhost 21422</runcommandpicklistitem>
-          <runcommandpicklistitem>"${OUTPUT_PATH}" localhost 54581</runcommandpicklistitem>
-          <runcommandpicklistitem>"${OUTPUT_PATH}" localhost 56855</runcommandpicklistitem>
-          <runcommandpicklistitem>"${OUTPUT_PATH}" localhost  39372</runcommandpicklistitem>
-          <runcommandpicklistitem>"${OUTPUT_PATH}" localhost  43283 </runcommandpicklistitem>
+          <runcommandpicklistitem>"${OUTPUT_PATH}" localhost    46314</runcommandpicklistitem>
+          <runcommandpicklistitem>"${OUTPUT_PATH}" localhost    42862</runcommandpicklistitem>
+          <runcommandpicklistitem>"${OUTPUT_PATH}" localhost    59985</runcommandpicklistitem>
+          <runcommandpicklistitem>"${OUTPUT_PATH}" localhost    46316</runcommandpicklistitem>
+          <runcommandpicklistitem>"${OUTPUT_PATH}" localhost    49010</runcommandpicklistitem>
+          <runcommandpicklistitem>"${OUTPUT_PATH}" localhost    34083</runcommandpicklistitem>
+          <runcommandpicklistitem>"${OUTPUT_PATH}" localhost    36641</runcommandpicklistitem>
+          <runcommandpicklistitem>"${OUTPUT_PATH}" localhost    48742</runcommandpicklistitem>
+          <runcommandpicklistitem>"${OUTPUT_PATH}" localhost    34853</runcommandpicklistitem>
+          <runcommandpicklistitem>"${OUTPUT_PATH}" localhost    60641</runcommandpicklistitem>
         </runcommandpicklist>
-        <runcommand>"${OUTPUT_PATH}" localhost  43283</runcommand>
+        <runcommand>"${OUTPUT_PATH}" localhost    60641</runcommand>
         <rundir></rundir>
         <buildfirst>true</buildfirst>
         <terminal-type>0</terminal-type>

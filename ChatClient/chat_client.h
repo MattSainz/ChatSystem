@@ -38,9 +38,13 @@ extern "C" {
   
   struct sockaddr_in addr, remote_addr; /* an Internet endpoint address         */
   
+  int id; 
+
+  char* server_port;
+
+  char* server_host;
+
   int tcp_socket;
-  
-  int udp_socket;
   /*
    * Sends start message to the chat coordinator 
    * if there is an error the appropriate message is printed 
@@ -54,7 +58,7 @@ extern "C" {
    * Sends find to the coordinator and then uses those credentials 
    * to join a session
    */
-  void session_join(char* s_name, char* host, char* port );
+  void session_join(char* s_name );
   
   /*
    * Sends message to chat server
@@ -96,6 +100,8 @@ extern "C" {
   void connect_sock(const char* ip, const char* port, int con_type);
   
   int errexit(const char* format, ...);
+
+  char* send_command(char* command, char* msg);
     
 #ifdef	__cplusplus
 }
