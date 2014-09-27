@@ -3,6 +3,26 @@
  */
 #include "session_server.h"
 
+int msg_in_history(char* id, int msg )
+{
+  int to_ret = 0;
+  char *history = DictSearch( msg_history, id ); 
+  char* old_msg;
+  char id_s[20];
+
+  sprintf(id_s,"%d",id);
+
+  while( (old_msg = strsep(&history,",") != NULL && old_msg != '\0'))
+  {
+    if(strcmp(id_s,old_msg) == 0)
+    {
+      to_ret = 1;
+      break;
+    }
+  }
+  return to_ret;
+}
+
 void history_add(char *id)
 {
   int id_i = atoi(id);
@@ -25,40 +45,63 @@ void history_add(char *id)
   DictInsertS( msg_history, id_i, new_history);
 }//end history_edit
 
-int join()
+void join(int socket)
 {
-  return client_id++;
+  char new_client_id[20];
+  sprintf(new_client_id,"%d", client_id++);
+  DictInsert(clients, new_client_id, -1);
+  write(socket, new_client_id, sizeof(new_client_id));
 }
 
-int submit(char *id, char* msg)
+void submit(char *id, char* msg, int socket )
 {
-  printf("Id: %s Msg: %s \n", id, msg);
-  DictInsertS(messages, num_msg, msg); 
-  history_add(id);
-  num_msg++;
-  return 0;
-  
+  char to_ret[8];
+  if( strlen(msg) < 80)
+  {
+    DictInsertS(messages, num_msg, msg); 
+    history_add(id);
+    num_msg++;
+    sprintf(to_ret,"%d", 1);
+  }
+  else
+  {
+    sprintf(to_ret,"%s","Message length must be less than 80 chars");
+  }
+  write(socket, to_ret, sizeof(to_ret)); 
 }//end submit
 
-void get_next(char* client)
+void get_next(char* client, int socket)
 {
-    
+  int last_msg  = DictSearch( clients, client );
+  int new_msg = last_msg + 1;
+  char to_ret[MSG_SIZE];
+  printf(" Client: %s Last_Msg: %d New_Msg: %d \n", client, last_msg, new_msg);
+  if( msg_in_history(client, last_msg) == 0 ) 
+  {
+    if( new_msg < num_msg)
+    {
+      sprintf(to_ret,"%s", DictSearchS(messages, new_msg)); 
+      DictDelete(clients, client);
+      DictInsert(clients, client, new_msg);
+    }
+    else
+    {
+      sprintf(to_ret,"%s","No new messages ");
+    }
+  }
+
+  write(socket, to_ret, sizeof(to_ret)); 
 }//end get_next
 
-void get_all(char* client)
+void get_all(char* client, int socket)
 {
     
 }//end get_all
 
-void leave(char* client)
+void leave(char* clinet, int socket)
 {
     
 }//end leave
-
-void my_send(char *msg, int len, int client)
-{
-    
-}//end send
 
 void my_wait(int socket, int port)
 {
@@ -116,7 +159,6 @@ void my_wait(int socket, int port)
 int process( int socket )
 {
 
-
   char msg_c[BUF];
     //buffer that will hold client msg
   bzero(msg_c, BUF);
@@ -147,37 +189,31 @@ int process( int socket )
   printf("Arg: %s \n", arg);
  
   int command_int = atoi(command);
-  int new_id;
-  int result;
 
   char to_ret[sizeof(char)*BUFSIZE];
 
   switch(command_int)
   {
     case 4:
-      result = submit(id, arg );
-      sprintf(to_ret,"%d",result);
+      submit(id, arg, socket );
       break;
     case 1:
-      get_next( id );
+      get_next( id, socket );
       break;
     case 2:
-      get_all( id );
+      get_all( id, socket );
       break;
     case 7:
-      leave( id );
+      leave( id, socket );
       break;
     case 5:
-      new_id = join();
-      sprintf(to_ret, "%d", new_id);
-      printf("to_ret: %s \n", to_ret);
+      join(socket);
       break;
     default:
       sprintf(to_ret,"%s", " Command not Understood");
       break;
   }//end switch
 
-    write(socket, to_ret, sizeof(to_ret)); 
     printf("Closed socket \n");
   }
   return msg_size;
@@ -188,6 +224,6 @@ void init()
   num_msg     = 0;
   client_id   = 0;
   messages    = DictCreateS();
-  clients     = DictCreateS();
+  clients     = DictCreate();
   msg_history = DictCreateS();
 }//end init

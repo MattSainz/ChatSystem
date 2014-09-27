@@ -41,8 +41,10 @@ extern "C" {
   int id; 
 
   char* server_port;
-
   char* server_host;
+
+  char* coord_port;
+  char* coord_host;
 
   int tcp_socket;
   /*
@@ -52,7 +54,7 @@ extern "C" {
    * is printed to the screen. Listens for join command then calls the
    * session_join method
    */
-  void session_start(char* s_name, char* host, char* port );
+  void session_start(char* s_name);
   
   /*
    * Sends find to the coordinator and then uses those credentials 
@@ -95,7 +97,7 @@ extern "C" {
    * Handles communication with user 
    * and calls the correct commands
    */
-  void runner(char* ip, char* port);
+  void runner();
   
   void connect_sock(const char* ip, const char* port, int con_type);
   

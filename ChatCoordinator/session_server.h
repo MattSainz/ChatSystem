@@ -51,30 +51,25 @@ Dict msg_history;
  * Submits a message to the chat session must be 
  * ended with at <CR> 
  */
-int submit(char* id, char* msg);
+void submit(char* id, char* msg, int socket);
 
 /*
  * Gets the next message that has not been read by
  * this client from the chat session and sends to client
  */
-void get_next(char* client);
+void get_next(char* client, int socket);
 
 /* 
  * Gets all of the messages not read by the client
  * and first sends the number of new chat messages 
  * then sends the messages and their length
  */
-void get_all(char* client);
+void get_all(char* client, int socekt);
 
 /*
  * Closes the TCP connection with the client
  */
-void leave(char* client);
-
-/*
- * sends a message to the specified client
- */
-void my_send(char *msg, int len, int client);
+void leave(char* client, int socket);
 
 /*
  * Listens for a client then handles
@@ -98,9 +93,14 @@ void init();
  * allow for identification of different clients on the 
  * same network
  */
-int join();
+void join(int socket);
 
 /*
  * appends a message to a clients history
  */
 void history_add(char* id);
+
+/*
+ * Checks if a message was sent from the client 
+ */
+int msg_in_history(char* id, int msg);

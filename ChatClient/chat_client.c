@@ -68,7 +68,7 @@ void connect_server(char* host, char* port)
 
   }//end send command server
 
-char* send_command_coord(char* command, char* msg, char* host, char* port){
+char* send_command_coord(char* command, char* msg ){
   //connect_sock(host, port, 1);
   int sockfd, portno, n;
   int serverlen;
@@ -77,8 +77,8 @@ char* send_command_coord(char* command, char* msg, char* host, char* port){
   char *hostname;
   char buf[80];
  
-  hostname = host;
-  portno = atoi(port);
+  hostname = coord_host;
+  portno = atoi(coord_port);
 
   /* socket: create the socket */
   sockfd = socket(AF_INET, SOCK_DGRAM, 0);
@@ -144,7 +144,8 @@ void submit(char* msg){
 void get_next(){
   if( server_port != NULL)
   {
-
+    char* next_msg = send_command(GET_NEXT,NULL);
+    printf("Message: %s \n", next_msg);
   }
   else
   {
@@ -171,9 +172,9 @@ void session_exit(){
   
 }//end session_exit
 
-void session_start(char* s_name, char* host, char* port )
+void session_start(char* s_name )
 {
-  char* reply = send_command_coord(START, s_name, host, port);
+  char* reply = send_command_coord(START, s_name);
   if(strcmp(reply,"-1") == 0)
   {
     printf("Session %s already exists, cannot start \n", s_name);
@@ -182,15 +183,14 @@ void session_start(char* s_name, char* host, char* port )
   else
   {
     printf("Session %s created...attempting to join \n", s_name);
-    server_port = reply;
-    server_host = strdup(host);
-    connect_server(host, reply);
     session_join(s_name);
   }
 }//end session_start
 
-void session_join(char* s_name )
+void session_join(char* s_name)
 {
+  server_port = send_command_coord(FIND, s_name); 
+  connect_server(server_host, server_port);
   char* new_id = send_command(JOIN, s_name);
 
   if( strcmp(new_id,"-1") != 0 )
@@ -205,11 +205,11 @@ void session_join(char* s_name )
   free(new_id);
 }//end session_join
 
-void runner(char* ip, char* port)
+void runner()
 {
   int input;
   char input_s[sizeof(char)*MSG_SIZE];
-  
+
   printf("Welcome to the chat system Please enter a command \n");
   printf("1) Get Next, 2) Get All, 3) Start, 4) Submit message, 5) Join,");
   printf("  6) Leave, 7)Exit 8) print this message again \n");
@@ -230,7 +230,7 @@ void runner(char* ip, char* port)
       case 3:
         printf("Enter Session to Start: ");
         scanf("%s", input_s);
-        session_start( input_s, ip, port );
+        session_start( input_s );
         break;
       case 4:
         printf("Enter a new message: ");
@@ -272,7 +272,12 @@ int main(int argc, char** argv)
     id = -1;
     printf("Host Address: %s Host Port: %s \n", argv[1], argv[2]);
     //TODO check for formatting 
-    runner( argv[1], argv[2] ); 
+
+    coord_host  = strdup( argv[1] );
+    server_host = strdup(coord_host);
+    coord_port  = strdup( argv[2] );
+
+    runner(); 
     
     return 0;
   }
